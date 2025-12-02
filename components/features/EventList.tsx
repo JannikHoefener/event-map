@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react
 import { MapPin, Clock, Euro } from 'lucide-react-native';
 import { Colors } from '../../constants/Colors';
 import { BlurView } from 'expo-blur';
+import ItemCard from '../ui/ItemCard';
 
 interface Event {
     id: string;
@@ -19,29 +20,9 @@ interface EventListProps {
 
 export default function EventList({ events }: EventListProps) {
     const renderItem = ({ item }: { item: Event }) => (
-        <TouchableOpacity style={styles.card}>
-            <View style={styles.imagePlaceholder}>
-                <Text style={styles.categoryBadge}>{item.category}</Text>
-            </View>
-
-            <View style={styles.content}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>{item.title}</Text>
-                    <Text style={styles.price}>{item.price}</Text>
-                </View>
-
-                <View style={styles.details}>
-                    <View style={styles.detailRow}>
-                        <Clock size={14} color={Colors.light.tabIconDefault} />
-                        <Text style={styles.detailText}>{item.time}</Text>
-                    </View>
-                    <View style={styles.detailRow}>
-                        <MapPin size={14} color={Colors.light.tabIconDefault} />
-                        <Text style={styles.detailText}>{item.indoor ? 'Indoor' : 'Outdoor'}</Text>
-                    </View>
-                </View>
-            </View>
-        </TouchableOpacity>
+        <View style={{ marginBottom: 16 }}>
+            <ItemCard event={item} />
+        </View>
     );
 
     return (

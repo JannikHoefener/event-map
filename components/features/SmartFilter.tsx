@@ -27,6 +27,13 @@ export default function SmartFilter({ visible, onClose, onApply, initialFilters 
         categories: [] as string[],
     });
 
+    React.useEffect(() => {
+        if (visible && initialFilters) {
+            setFilters(initialFilters);
+            setStep('when'); // Reset step to start when reopening
+        }
+    }, [visible, initialFilters]);
+
     if (!visible) return null;
 
     const handleNext = () => {
@@ -138,25 +145,44 @@ export default function SmartFilter({ visible, onClose, onApply, initialFilters 
                         {step === 'what' && (
                             <View style={styles.categoriesGrid}>
                                 {[
-                                    { id: 'music', label: 'Musik', icon: Music },
-                                    { id: 'food', label: 'Essen', icon: Utensils },
-                                    { id: 'art', label: 'Kunst', icon: Palette },
-                                    { id: 'party', label: 'Party', icon: Music }, // Reusing Music for now
-                                ].map((cat) => (
-                                    <TouchableOpacity
-                                        key={cat.id}
-                                        style={[
-                                            styles.categoryChip,
-                                            filters.categories.includes(cat.id) && styles.selectedCategory
-                                        ]}
-                                        onPress={() => toggleCategory(cat.id)}
-                                    >
-                                        <cat.icon size={16} color={filters.categories.includes(cat.id) ? 'white' : Colors.light.text} />
-                                        <Text style={[styles.categoryText, filters.categories.includes(cat.id) && styles.selectedText]}>
-                                            {cat.label}
-                                        </Text>
-                                    </TouchableOpacity>
-                                ))}
+                                    '🎵 Musik',
+                                    '☕ Café',
+                                    '🍰 Desserts',
+                                    '🥤 Drinks',
+                                    '🔥 Grill & BBQ',
+                                    '🍕 Pizza',
+                                    '🍳 Frühstück',
+                                    '🥗 Vegan',
+                                    '🍔 Burger',
+                                    '🇮🇹 Italienisch',
+                                    '🍝 Pasta',
+                                    '🥣 Bowls',
+                                    '🥗 Healthy',
+                                    '🍜 Asiatisch',
+                                    '🍟 Fast Food',
+                                    '🦞 Seafood',
+                                    '🍣 Sushi',
+                                    '🥨 Deutsch',
+                                    '🎨 Kunst',
+                                    '🎉 Party',
+                                ].map((cat) => {
+                                    const label = cat.split(' ').slice(1).join(' ');
+                                    const id = label.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_');
+                                    return (
+                                        <TouchableOpacity
+                                            key={id}
+                                            style={[
+                                                styles.categoryChip,
+                                                filters.categories.includes(id) && styles.selectedCategory
+                                            ]}
+                                            onPress={() => toggleCategory(id)}
+                                        >
+                                            <Text style={[styles.categoryText, filters.categories.includes(id) && styles.selectedText]}>
+                                                {cat}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    );
+                                })}
                             </View>
                         )}
 

@@ -5,9 +5,11 @@ import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import { BlurView } from 'expo-blur';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MapPin, List, Filter, Navigation } from 'lucide-react-native';
+import { MapPin, List, Filter, Navigation, Sparkles, X } from 'lucide-react-native';
 import { Colors } from '../constants/Colors';
 import SmartFilter from '../components/features/SmartFilter';
+import FilterModal from '../components/features/FilterModal';
+import ItemCard from '../components/ui/ItemCard';
 
 const { width, height } = Dimensions.get('window');
 
@@ -64,7 +66,9 @@ import EventList from '../components/features/EventList';
 
 export default function HomeScreen() {
     const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
-    const [isFilterVisible, setIsFilterVisible] = useState(false);
+    const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+    const [isAgentVisible, setIsAgentVisible] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [activeFilters, setActiveFilters] = useState({
         when: 'any',
         indoor: 'any',
@@ -98,7 +102,8 @@ export default function HomeScreen() {
 
     const handleApplyFilters = (newFilters: any) => {
         setActiveFilters(newFilters);
-        setIsFilterVisible(false);
+        setIsFilterModalVisible(false);
+        setIsAgentVisible(false);
     };
 
     return (
@@ -116,13 +121,16 @@ export default function HomeScreen() {
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     }}
+                    onPress={() => setSelectedEvent(null)}
                 >
                     {filteredEvents.map((event) => (
                         <Marker
                             key={event.id}
                             coordinate={event.coordinate}
-                            title={event.title}
-                            description={event.time}
+                            onPress={(e) => {
+                                e.stopPropagation();
+                                setSelectedEvent(event);
+                            }}
                         >
                             <View style={styles.markerContainer}>
                                 <View style={[styles.markerBubble, { backgroundColor: event.indoor ? Colors.light.primary : Colors.light.secondary }]}>
@@ -145,8 +153,16 @@ export default function HomeScreen() {
                         <Text style={styles.locationText}>Hamburg, DE</Text>
                     </BlurView>
 
-                    <TouchableOpacity style={styles.profileButton}>
-                        <View style={styles.avatarPlaceholder} />
+                    <TouchableOpacity
+                        style={styles.agentButton}
+                        onPress={() => setIsAgentVisible(true)}
+                    >
+                        <LinearGradient
+                            colors={[Colors.light.primary, '#8B5CF6']}
+                            style={styles.agentGradient}
+                        >
+                            <Sparkles size={20} color="white" />
+                        </LinearGradient>
                     </TouchableOpacity>
                 </View>
 
@@ -154,7 +170,7 @@ export default function HomeScreen() {
                 <View style={styles.quickFilters}>
                     <TouchableOpacity
                         style={[styles.filterChip, activeFilters.when !== 'any' && styles.activeFilterChip]}
-                        onPress={() => setIsFilterVisible(true)}
+                        onPress={() => setIsFilterModalVisible(true)}
                     >
                         <Text style={[styles.filterText, activeFilters.when !== 'any' && styles.activeFilterText]}>
                             {activeFilters.when === 'today' ? 'Heute' :
@@ -165,7 +181,7 @@ export default function HomeScreen() {
 
                     <TouchableOpacity
                         style={[styles.filterChip, { marginLeft: 8 }, activeFilters.indoor !== 'any' && styles.activeFilterChip]}
-                        onPress={() => setIsFilterVisible(true)}
+                        onPress={() => setIsFilterModalVisible(true)}
                     >
                         <Text style={[styles.filterText, activeFilters.indoor !== 'any' && styles.activeFilterText]}>
                             {activeFilters.indoor === 'indoor' ? 'Drinnen' :
@@ -180,7 +196,7 @@ export default function HomeScreen() {
                 <BlurView intensity={90} tint="light" style={styles.bottomBar}>
                     <TouchableOpacity
                         style={styles.actionButton}
-                        onPress={() => setIsFilterVisible(true)}
+                        onPress={() => setIsFilterModalVisible(true)}
                     >
                         <Filter size={20} color={Colors.light.text} />
                         <Text style={styles.actionText}>Filter</Text>
@@ -202,10 +218,40 @@ export default function HomeScreen() {
                 </BlurView>
             </View>
 
-            {/* Smart Filter Modal */}
+            {/* Selected Event Card (Bottom Sheet style) */}
+            {selectedEvent && viewMode === 'map' && (
+                <View style={styles.eventCardContainer}>
+                    <BlurView intensity={100} tint="light" style={styles.eventCardWrapper}>
+                        <View style={styles.eventCardHeader}>
+                            <View style={styles.handle} />
+                            <TouchableOpacity
+                                onPress={() => setSelectedEvent(null)}
+                                style={styles.closeCardButton}
+                            >
+                                <X size={20} color={Colors.light.tabIconDefault} />
+                            </TouchableOpacity>
+                        </View>
+                        <ItemCard
+                            event={selectedEvent}
+                            compact={true}
+                            style={{ elevation: 0, shadowOpacity: 0 }}
+                        />
+                    </BlurView>
+                </View>
+            )}
+
+            {/* Smart Filter (Agent) */}
             <SmartFilter
-                visible={isFilterVisible}
-                onClose={() => setIsFilterVisible(false)}
+                visible={isAgentVisible}
+                onClose={() => setIsAgentVisible(false)}
+                onApply={handleApplyFilters}
+                initialFilters={activeFilters}
+            />
+
+            {/* Manual Filter Modal */}
+            <FilterModal
+                visible={isFilterModalVisible}
+                onClose={() => setIsFilterModalVisible(false)}
                 onApply={handleApplyFilters}
                 initialFilters={activeFilters}
             />
@@ -252,24 +298,22 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: Colors.light.text,
     },
-    profileButton: {
+    agentButton: {
         width: 44,
         height: 44,
         borderRadius: 22,
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 4,
     },
-    avatarPlaceholder: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: Colors.light.primary,
+    agentGradient: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 22,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     quickFilters: {
         flexDirection: 'row',
@@ -358,5 +402,40 @@ const styles = StyleSheet.create({
         borderRightColor: 'transparent',
         borderTopColor: 'white',
         marginTop: -2,
+    },
+    eventCardContainer: {
+        position: 'absolute',
+        bottom: 110, // Above bottom bar
+        left: 20,
+        right: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+        elevation: 8,
+    },
+    eventCardWrapper: {
+        borderRadius: 20,
+        padding: 16,
+        overflow: 'hidden',
+        backgroundColor: 'rgba(255,255,255,0.9)',
+    },
+    eventCardHeader: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    handle: {
+        width: 40,
+        height: 4,
+        backgroundColor: '#E5E7EB',
+        borderRadius: 2,
+    },
+    closeCardButton: {
+        position: 'absolute',
+        right: 0,
+        top: -4,
+        padding: 4,
     },
 });
