@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, Platform } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { X, Check } from 'lucide-react-native';
+import { X, Check, Calendar } from 'lucide-react-native';
 import { Colors } from '../../constants/Colors';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface FilterModalProps {
     visible: boolean;
@@ -12,11 +13,16 @@ interface FilterModalProps {
         when: string;
         indoor: string;
         categories: string[];
+        dateFrom?: Date | null;
+        dateTo?: Date | null;
+        timeOfDay?: string[];
     };
 }
 
 export default function FilterModal({ visible, onClose, onApply, initialFilters }: FilterModalProps) {
     const [filters, setFilters] = useState(initialFilters);
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [datePickerMode, setDatePickerMode] = useState<'from' | 'to'>('from');
 
     useEffect(() => {
         if (visible) {
@@ -65,17 +71,136 @@ export default function FilterModal({ visible, onClose, onApply, initialFilters 
                     <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
                         {/* Tag (Day) */}
                         <Text style={styles.sectionTitle}>Tag</Text>
+
+                        {/* First Row: Heute, Morgen, Übermorgen */}
+                        <View style={styles.dateRow}>
+                            {['Heute', 'Morgen', 'Übermorgen'].map((day) => {
+                                const today = new Date();
+                                const tomorrow = new Date(today);
+                                tomorrow.setDate(tomorrow.getDate() + 1);
+                                const dayAfterTomorrow = new Date(today);
+                                dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+
+                                const id = day === 'Heute' ? 'today'
+                                    : day === 'Morgen' ? 'tomorrow'
+                                        : 'dayAfterTomorrow';
+
+                                const getLabel = () => {
+                                    if (day === 'Heute') return `Heute`;
+                                    if (day === 'Morgen') return `Morgen`;
+                                    if (day === 'Übermorgen') return `Übermorgen`;
+                                    return day;
+                                };
+
+                                const isActive = filters.when === id;
+                                return (
+                                    <TouchableOpacity
+                                        key={day}
+                                        style={[styles.dateChip, isActive && styles.activeChip]}
+                                        onPress={() => setFilters({
+                                            ...filters,
+                                            when: isActive ? 'any' : id,
+                                            dateFrom: null,
+                                            dateTo: null
+                                        })}
+                                    >
+                                        <Text style={[styles.chipText, isActive && styles.activeChipText]}>{getLabel()}</Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+
+                        {/* Second Row: Wochenende, Egal */}
                         <View style={styles.chipContainer}>
-                            {['Heute', 'Morgen', 'Mittwoch', 'Donnerstag'].map((day) => {
-                                const id = day === 'Heute' ? 'today' : day === 'Morgen' ? 'tomorrow' : day.toLowerCase();
+                            {['Wochenende', 'Egal'].map((day) => {
+                                const id = day === 'Wochenende' ? 'weekend' : 'any';
                                 const isActive = filters.when === id;
                                 return (
                                     <TouchableOpacity
                                         key={day}
                                         style={[styles.chip, isActive && styles.activeChip]}
-                                        onPress={() => setFilters({ ...filters, when: isActive ? 'any' : id })}
+                                        onPress={() => setFilters({
+                                            ...filters,
+                                            when: isActive ? 'any' : id,
+                                            dateFrom: null,
+                                            dateTo: null
+                                        })}
                                     >
                                         <Text style={[styles.chipText, isActive && styles.activeChipText]}>{day}</Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+
+                        {/* Date Range */}
+                        <Text style={styles.sectionTitle}>Oder wähle eine Zeitspanne:</Text>
+                        <View style={styles.dateRangeRow}>
+                            <TouchableOpacity
+                                style={styles.datePickerCard}
+                                onPress={() => {
+                                    setDatePickerMode('from');
+                                    setShowDatePicker(true);
+                                }}
+                            >
+                                <View style={styles.datePickerHeader}>
+                                    <Text style={styles.datePickerLabel}>von:</Text>
+                                </View>
+                                <View style={[styles.chip, filters.dateFrom && styles.activeChip]}>
+                                    {filters.dateFrom ? (
+                                        <Text style={[styles.chipText, filters.dateFrom && styles.activeChipText]}>
+                                            {filters.dateFrom.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}
+                                        </Text>
+                                    ) : (
+                                        <Calendar size={20} color={Colors.light.tabIconDefault} />
+                                    )}
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.datePickerCard}
+                                onPress={() => {
+                                    setDatePickerMode('to');
+                                    setShowDatePicker(true);
+                                }}
+                            >
+                                <View style={styles.datePickerHeader}>
+                                    <Text style={styles.datePickerLabel}>bis:</Text>
+                                </View>
+                                <View style={[styles.chip, filters.dateTo && styles.activeChip]}>
+                                    {filters.dateTo ? (
+                                        <Text style={[styles.chipText, filters.dateTo && styles.activeChipText]}>
+                                            {filters.dateTo.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}
+                                        </Text>
+                                    ) : (
+                                        <Calendar size={20} color={Colors.light.tabIconDefault} />
+                                    )}
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* Time of Day */}
+                        <Text style={styles.sectionTitle}>Tageszeit</Text>
+                        <View style={styles.chipContainer}>
+                            {[
+                                { id: 'morning', label: '🌅 Morgens'/* , time: '06:00-12:00' */ },
+                                { id: 'afternoon', label: '☀️ Mittags'/* , time: '12:00-18:00' */ },
+                                { id: 'evening', label: '🌙 Abends'/* , time: '18:00-00:00' */ }
+                            ].map((timeSlot) => {
+                                const isActive = filters.timeOfDay?.includes(timeSlot.id) || false;
+                                return (
+                                    <TouchableOpacity
+                                        key={timeSlot.id}
+                                        style={[styles.chip, isActive && styles.activeChip]}
+                                        onPress={() => {
+                                            const currentTimeOfDay = filters.timeOfDay || [];
+                                            const newTimeOfDay = currentTimeOfDay.includes(timeSlot.id)
+                                                ? currentTimeOfDay.filter(t => t !== timeSlot.id)
+                                                : [...currentTimeOfDay, timeSlot.id];
+                                            setFilters({ ...filters, timeOfDay: newTimeOfDay });
+                                        }}
+                                    >
+                                        <Text style={[styles.chipText, isActive && styles.activeChipText]}>
+                                            {timeSlot.label} {timeSlot.time}
+                                        </Text>
                                     </TouchableOpacity>
                                 );
                             })}
@@ -103,14 +228,14 @@ export default function FilterModal({ visible, onClose, onApply, initialFilters 
                         </View>
 
                         {/* Uhrzeit (Time) - Mockup for now */}
-                        <Text style={styles.sectionTitle}>Uhrzeit</Text>
+                        {/* <Text style={styles.sectionTitle}>Uhrzeit</Text>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
                             {['00:00', '00:30', '01:00', '01:30', '02:00'].map((time) => (
                                 <TouchableOpacity key={time} style={styles.chip}>
                                     <Text style={styles.chipText}>{time}</Text>
                                 </TouchableOpacity>
                             ))}
-                        </ScrollView>
+                        </ScrollView> */}
 
                         {/* Kategorie */}
                         <Text style={styles.sectionTitle}>Kategorie</Text>
@@ -163,6 +288,80 @@ export default function FilterModal({ visible, onClose, onApply, initialFilters 
                     </View>
                 </View>
             </View>
+
+            {/* DateTimePicker */}
+            {showDatePicker && (
+                Platform.OS === 'ios' ? (
+                    <Modal
+                        transparent={true}
+                        animationType="fade"
+                        visible={showDatePicker}
+                        onRequestClose={() => setShowDatePicker(false)}
+                    >
+                        <TouchableOpacity
+                            style={styles.iosDatePickerOverlay}
+                            activeOpacity={1}
+                            onPress={() => setShowDatePicker(false)}
+                        >
+                            <View style={styles.iosDatePickerContainer} onStartShouldSetResponder={() => true}>
+                                <View style={styles.iosDatePickerHeader}>
+                                    <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                                        <Text style={styles.iosDatePickerDone}>Fertig</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <DateTimePicker
+                                    value={datePickerMode === 'from' ? (filters.dateFrom || new Date()) : (filters.dateTo || new Date())}
+                                    mode="date"
+                                    display="inline"
+                                    onChange={(event, selectedDate) => {
+                                        if (selectedDate) {
+                                            if (datePickerMode === 'from') {
+                                                setFilters({
+                                                    ...filters,
+                                                    when: 'custom',
+                                                    dateFrom: selectedDate
+                                                });
+                                            } else {
+                                                setFilters({
+                                                    ...filters,
+                                                    when: 'custom',
+                                                    dateTo: selectedDate
+                                                });
+                                            }
+                                        }
+                                    }}
+                                    style={styles.iosDatePicker}
+                                    themeVariant="light"
+                                />
+                            </View>
+                        </TouchableOpacity>
+                    </Modal>
+                ) : (
+                    <DateTimePicker
+                        value={datePickerMode === 'from' ? (filters.dateFrom || new Date()) : (filters.dateTo || new Date())}
+                        mode="date"
+                        display="default"
+                        onChange={(event, selectedDate) => {
+                            setShowDatePicker(false);
+                            if (selectedDate) {
+                                if (datePickerMode === 'from') {
+                                    setFilters({
+                                        ...filters,
+                                        when: 'custom',
+                                        dateFrom: selectedDate
+                                    });
+                                } else {
+                                    setFilters({
+                                        ...filters,
+                                        when: 'custom',
+                                        dateTo: selectedDate
+                                    });
+                                }
+                            }
+                        }}
+                    />
+                )
+            )}
         </Modal>
     );
 }
@@ -234,7 +433,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     chip: {
-        paddingHorizontal: 16,
+        paddingHorizontal: 10,
         paddingVertical: 10,
         backgroundColor: '#F9FAFB',
         borderRadius: 20,
@@ -272,5 +471,75 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '700',
         color: 'white',
+    },
+    dateRangeRow: {
+        flexDirection: 'row',
+        gap: 12,
+    },
+    datePickerCard: {
+        flex: 1,
+        backgroundColor: 'white',
+        borderRadius: 12,
+        gap: 8,
+        
+    },
+    dateRow: {
+        flexDirection: 'row',
+        gap: 8,
+        marginBottom: 12,
+    },
+    dateChip: {
+        flex: 1,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        backgroundColor: '#F9FAFB',
+        borderRadius: 20,
+        alignItems: 'center',
+    },
+    datePickerHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+        marginBottom: 6,
+    },
+    datePickerLabel: {
+        fontSize: 13,
+        fontWeight: '600',
+        color: Colors.light.text,
+    },
+    iosDatePickerOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    iosDatePickerContainer: {
+        backgroundColor: 'white',
+        borderRadius: 16,
+        padding: 16,
+        width: '100%',
+        maxWidth: 400,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 5,
+    },
+    iosDatePickerHeader: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginBottom: 8,
+        paddingBottom: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F3F4F6',
+    },
+    iosDatePickerDone: {
+        color: Colors.light.primary,
+        fontWeight: '600',
+        fontSize: 16,
+    },
+    iosDatePicker: {
+        height: 320,
     },
 });

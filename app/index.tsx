@@ -14,6 +14,14 @@ import ItemCard from '../components/ui/ItemCard';
 const { width, height } = Dimensions.get('window');
 
 // Mock Data for Events
+// Helper to create dates relative to today
+const getRelativeDate = (days: number, hours: number) => {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    date.setHours(hours, 0, 0, 0);
+    return date;
+};
+
 const EVENTS = [
     {
         id: '1',
@@ -22,15 +30,17 @@ const EVENTS = [
         category: 'Music',
         price: '20€',
         time: 'Tonight, 20:00',
+        date: getRelativeDate(0, 20), // Today 20:00
         indoor: true,
     },
     {
         id: '2',
-        title: 'Street Food Festival',
+        title: 'Street Food Market',
         coordinate: { latitude: 53.5561, longitude: 9.9837 },
         category: 'Food',
         price: 'Free',
         time: 'Tomorrow, 12:00',
+        date: getRelativeDate(1, 12), // Tomorrow 12:00
         indoor: false,
     },
     {
@@ -40,6 +50,7 @@ const EVENTS = [
         category: 'Art',
         price: '15€',
         time: 'Today, 14:00',
+        date: getRelativeDate(0, 14), // Today 14:00
         indoor: true,
     },
     {
@@ -49,6 +60,7 @@ const EVENTS = [
         category: 'Party',
         price: '10€',
         time: 'Tonight, 23:00',
+        date: getRelativeDate(0, 23), // Today 23:00
         indoor: true,
     },
     {
@@ -58,6 +70,7 @@ const EVENTS = [
         category: 'Health',
         price: '5€',
         time: 'Tomorrow, 10:00',
+        date: getRelativeDate(1, 10), // Tomorrow 10:00
         indoor: false,
     },
 ];
@@ -73,21 +86,79 @@ export default function HomeScreen() {
         when: 'any',
         indoor: 'any',
         categories: [] as string[],
+        dateFrom: null as Date | null,
+        dateTo: null as Date | null,
+        timeOfDay: [] as string[], // morning, afternoon, evening
     });
 
     const filteredEvents = useMemo(() => {
         return EVENTS.filter(event => {
-            // Filter by Indoor/Outdoor
+            // 1. Filter by Indoor/Outdoor
             if (activeFilters.indoor !== 'any') {
                 const isIndoor = activeFilters.indoor === 'indoor';
                 if (event.indoor !== isIndoor) return false;
             }
 
-            // Filter by Category (if any selected)
+            // 2. Filter by Date (When)
+            const eventDate = new Date(event.date);
+            const now = new Date();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            const dayAfterTomorrow = new Date(today);
+            dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+
+            if (activeFilters.when !== 'any') {
+                if (activeFilters.when === 'today') {
+                    if (eventDate < today || eventDate >= tomorrow) return false;
+                } else if (activeFilters.when === 'tomorrow') {
+                    if (eventDate < tomorrow || eventDate >= dayAfterTomorrow) return false;
+                } else if (activeFilters.when === 'dayAfterTomorrow') {
+                    const nextDay = new Date(dayAfterTomorrow);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    if (eventDate < dayAfterTomorrow || eventDate >= nextDay) return false;
+                } else if (activeFilters.when === 'weekend') {
+                    // Simple weekend logic: next Saturday/Sunday
+                    const dayOfWeek = today.getDay();
+                    const daysUntilSaturday = (6 - dayOfWeek + 7) % 7;
+                    const nextSaturday = new Date(today);
+                    nextSaturday.setDate(today.getDate() + daysUntilSaturday);
+                    const nextMonday = new Date(nextSaturday);
+                    nextMonday.setDate(nextSaturday.getDate() + 2);
+
+                    if (eventDate < nextSaturday || eventDate >= nextMonday) return false;
+                } else if (activeFilters.when === 'custom') {
+                    if (activeFilters.dateFrom) {
+                        const fromDate = new Date(activeFilters.dateFrom);
+                        fromDate.setHours(0, 0, 0, 0);
+                        if (eventDate < fromDate) return false;
+                    }
+                    if (activeFilters.dateTo) {
+                        const toDate = new Date(activeFilters.dateTo);
+                        toDate.setHours(23, 59, 59, 999);
+                        if (eventDate > toDate) return false;
+                    }
+                }
+            }
+
+            // 3. Filter by Time of Day
+            if (activeFilters.timeOfDay && activeFilters.timeOfDay.length > 0) {
+                const hour = eventDate.getHours();
+                const matchesTime = activeFilters.timeOfDay.some(time => {
+                    if (time === 'morning') return hour >= 6 && hour < 12;
+                    if (time === 'afternoon') return hour >= 12 && hour < 18;
+                    if (time === 'evening') return hour >= 18 || hour < 6; // Evening/Night
+                    return false;
+                });
+                if (!matchesTime) return false;
+            }
+
+            // 4. Filter by Category (if any selected)
             if (activeFilters.categories.length > 0) {
-                // Simple mapping for demo purposes
                 const eventCat = event.category.toLowerCase();
-                // Check if any selected category matches
                 const matches = activeFilters.categories.some(cat =>
                     (cat === 'music' && (eventCat === 'music' || eventCat === 'party')) ||
                     (cat === 'food' && eventCat === 'food') ||
@@ -95,7 +166,6 @@ export default function HomeScreen() {
                 );
                 if (!matches) return false;
             }
-
             return true;
         });
     }, [activeFilters]);
