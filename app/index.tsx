@@ -21,6 +21,7 @@ import { Event, ActiveFilters, ViewMode, DEFAULT_FILTERS } from '../types';
 
 // Data
 import { MOCK_EVENTS, DEFAULT_MAP_REGION, DEFAULT_LOCATION } from '../data/mockEvents';
+import { getCategoryColor } from '../data/categories';
 
 // Utils
 import { filterEvents } from '../utils/filters';
@@ -126,9 +127,7 @@ export default function HomeScreen() {
                                     style={[
                                         styles.markerBubble,
                                         {
-                                            backgroundColor: event.indoor
-                                                ? Brand.colors.primary
-                                                : Brand.colors.secondary,
+                                            backgroundColor: getCategoryColor(event.category),
                                         },
                                     ]}
                                 >

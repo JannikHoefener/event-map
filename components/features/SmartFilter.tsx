@@ -20,7 +20,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { X, Calendar, Coffee, CloudSun } from 'lucide-react-native';
 import { Brand } from '../../constants/brand';
 import { ActiveFilters, FilterStep, TimeOfDay } from '../../types';
-import { CATEGORIES, TIME_SLOTS } from '../../data/categories';
+import { CATEGORIES, TIME_SLOTS, DAY_PRESETS, getCategoryColor } from '../../data/categories';
 import { toggleCategory, toggleTimeOfDay } from '../../utils/filters';
 import { getDayLabel } from '../../utils/dates';
 import {
@@ -121,18 +121,20 @@ export default function SmartFilter({
     // Render Step 1: When
     const renderWhenStep = () => (
         <>
-            {/* Quick Presets - Row 1 */}
+            {/* Tag Section */}
+            <SectionTitle title="Tag" marginTop={0} />
+
+            {/* Day Presets - Row 1 */}
             <View style={styles.dateRow}>
-                {(['today', 'tomorrow', 'dayAfterTomorrow'] as const).map((option) => (
-                    <OptionCard
-                        key={option}
-                        label={getDayLabel(option)}
-                        icon={<Calendar size={20} color={filters.when === option ? 'white' : Brand.colors.primary} />}
-                        selected={filters.when === option}
+                {DAY_PRESETS.firstRow.map((day) => (
+                    <Chip
+                        key={day.id}
+                        label={day.label}
+                        active={filters.when === day.id}
                         onPress={() =>
                             setFilters({
                                 ...filters,
-                                when: option,
+                                when: day.id,
                                 dateFrom: null,
                                 dateTo: null,
                             })
@@ -142,107 +144,87 @@ export default function SmartFilter({
                 ))}
             </View>
 
-            {/* Quick Presets - Row 2 */}
-            <View style={styles.optionsGrid}>
-                {[
-                    { id: 'weekend', label: 'Wochenende' },
-                    { id: 'any', label: 'Egal' },
-                ].map((option) => (
-                    <OptionCard
-                        key={option.id}
-                        label={option.label}
-                        icon={<Calendar size={24} color={filters.when === option.id ? 'white' : Brand.colors.primary} />}
-                        selected={filters.when === option.id}
+            {/* Day Presets - Row 2 */}
+            <View style={styles.dateRow}>
+                {DAY_PRESETS.secondRow.map((day) => (
+                    <Chip
+                        key={day.id}
+                        label={day.label}
+                        active={filters.when === day.id}
                         onPress={() =>
                             setFilters({
                                 ...filters,
-                                when: option.id as ActiveFilters['when'],
+                                when: day.id,
                                 dateFrom: null,
                                 dateTo: null,
                             })
                         }
+                        variant="date"
                     />
                 ))}
             </View>
 
             {/* Date Range */}
-            <SectionTitle title="Oder wähle eine Zeitspanne:" marginTop={Brand.spacing.xxl} />
+            <SectionTitle title="Oder wähle eine Zeitspanne:" marginTop={Brand.spacing.lg} />
             <View style={styles.dateRangeRow}>
                 {/* From Date */}
-                <TouchableOpacity
-                    style={styles.datePickerCard}
-                    onPress={() => {
-                        setDatePickerMode('from');
-                        setShowDatePicker(true);
-                    }}
-                >
-                    <View style={styles.datePickerHeader}>
-                        <Calendar size={14} color={Brand.colors.primary} />
-                        <Text style={styles.datePickerLabel}>von:</Text>
-                    </View>
-                    <View style={styles.datePicker}>
+                <View style={styles.datePickerColumn}>
+                    <Text style={styles.datePickerLabel}>von:</Text>
+                    <TouchableOpacity
+                        style={[styles.datePicker, filters.dateFrom && styles.datePickerActive]}
+                        onPress={() => {
+                            setDatePickerMode('from');
+                            setShowDatePicker(true);
+                        }}
+                    >
                         {filters.dateFrom ? (
-                            <Text style={styles.datePickerText}>
+                            <Text style={[styles.datePickerText, styles.datePickerTextActive]}>
                                 {filters.dateFrom.toLocaleDateString('de-DE', {
                                     day: '2-digit',
                                     month: '2-digit',
-                                    year: 'numeric',
                                 })}
                             </Text>
                         ) : (
                             <Calendar size={24} color={Brand.theme.light.tabIconDefault} />
                         )}
-                    </View>
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                </View>
 
                 {/* To Date */}
-                <TouchableOpacity
-                    style={styles.datePickerCard}
-                    onPress={() => {
-                        setDatePickerMode('to');
-                        setShowDatePicker(true);
-                    }}
-                >
-                    <View style={styles.datePickerHeader}>
-                        <Calendar size={14} color={Brand.colors.primary} />
-                        <Text style={styles.datePickerLabel}>bis:</Text>
-                    </View>
-                    <View style={styles.datePicker}>
+                <View style={styles.datePickerColumn}>
+                    <Text style={styles.datePickerLabel}>bis:</Text>
+                    <TouchableOpacity
+                        style={[styles.datePicker, filters.dateTo && styles.datePickerActive]}
+                        onPress={() => {
+                            setDatePickerMode('to');
+                            setShowDatePicker(true);
+                        }}
+                    >
                         {filters.dateTo ? (
-                            <Text style={styles.datePickerText}>
+                            <Text style={[styles.datePickerText, styles.datePickerTextActive]}>
                                 {filters.dateTo.toLocaleDateString('de-DE', {
                                     day: '2-digit',
                                     month: '2-digit',
-                                    year: 'numeric',
                                 })}
                             </Text>
                         ) : (
                             <Calendar size={24} color={Brand.theme.light.tabIconDefault} />
                         )}
-                    </View>
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                </View>
             </View>
 
             {/* Time of Day */}
-            <SectionTitle title="Tageszeit:" marginTop={Brand.spacing.xxl} />
-            <View style={styles.timeOfDayChips}>
-                {TIME_SLOTS.map((timeSlot) => {
-                    const isActive = filters.timeOfDay?.includes(timeSlot.id) || false;
-                    return (
-                        <TouchableOpacity
-                            key={timeSlot.id}
-                            style={[styles.timeOfDayChip, isActive && styles.selectedCategory]}
-                            onPress={() => handleToggleTimeOfDay(timeSlot.id)}
-                        >
-                            <Text style={[styles.timeOfDayLabel, isActive && styles.selectedText]}>
-                                {timeSlot.label}
-                            </Text>
-                            <Text style={[styles.timeOfDayTime, isActive && styles.selectedText]}>
-                                {timeSlot.time}
-                            </Text>
-                        </TouchableOpacity>
-                    );
-                })}
+            <SectionTitle title="Tageszeit" marginTop={Brand.spacing.lg} />
+            <View style={styles.timeChipsRow}>
+                {TIME_SLOTS.map((timeSlot) => (
+                    <Chip
+                        key={timeSlot.id}
+                        label={timeSlot.label}
+                        active={filters.timeOfDay?.includes(timeSlot.id) || false}
+                        onPress={() => handleToggleTimeOfDay(timeSlot.id)}
+                    />
+                ))}
             </View>
         </>
     );
@@ -278,6 +260,7 @@ export default function SmartFilter({
                     key={cat.id}
                     label={cat.displayLabel}
                     active={filters.categories.includes(cat.id)}
+                    activeColor={getCategoryColor(cat.id)}
                     onPress={() => handleToggleCategory(cat.id)}
                 />
             ))}
@@ -359,8 +342,12 @@ export default function SmartFilter({
                     {/* Step Indicator */}
                     <StepIndicator steps={3} currentStep={currentStepIndex} />
 
-                    {/* Content */}
-                    <ScrollView contentContainerStyle={styles.scrollContent}>
+                    {/* Content - scrollable with max height */}
+                    <ScrollView
+                        style={styles.scrollView}
+                        contentContainerStyle={styles.scrollContent}
+                        showsVerticalScrollIndicator={false}
+                    >
                         {step === 'when' && renderWhenStep()}
                         {step === 'where' && renderWhereStep()}
                         {step === 'what' && renderWhatStep()}
@@ -430,6 +417,9 @@ const styles = StyleSheet.create({
         backgroundColor: Brand.colors.gray[100],
         borderRadius: Brand.radius.chip,
     },
+    scrollView: {
+        maxHeight: 350, // Limit height to keep modal on screen
+    },
     scrollContent: {
         paddingVertical: Brand.spacing.md,
     },
@@ -457,29 +447,48 @@ const styles = StyleSheet.create({
         borderColor: Brand.colors.gray[100],
         ...Brand.shadows.sm,
     },
+    datePickerColumn: {
+        flex: 1,
+    },
     datePickerHeader: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: Brand.spacing.xs,
     },
     datePickerLabel: {
-        fontSize: Brand.typography.fontSize.md,
-        fontWeight: Brand.typography.fontWeight.semibold,
-        color: Brand.theme.light.text,
-    },
-    datePicker: {
-        backgroundColor: Brand.colors.white,
-        borderRadius: Brand.radius.sm,
-        padding: Brand.spacing.md,
-        borderWidth: 1,
-        borderColor: Brand.colors.gray[200],
-        alignItems: 'center',
-    },
-    datePickerText: {
-        fontSize: Brand.typography.fontSize.md,
+        fontSize: Brand.typography.fontSize.base,
         fontWeight: Brand.typography.fontWeight.medium,
         color: Brand.theme.light.text,
+        marginBottom: Brand.spacing.sm,
+    },
+    datePicker: {
+        backgroundColor: Brand.colors.gray[50],
+        borderRadius: Brand.radius.lg,
+        paddingVertical: Brand.spacing.md,
+        paddingHorizontal: Brand.spacing.xl,
+        borderWidth: 1,
+        borderColor: Brand.colors.gray[100],
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: 48,
+    },
+    datePickerActive: {
+        backgroundColor: Brand.colors.primary,
+        borderColor: Brand.colors.primary,
+    },
+    datePickerText: {
+        fontSize: Brand.typography.fontSize.lg,
+        fontWeight: Brand.typography.fontWeight.semibold,
+        color: Brand.theme.light.text,
         textAlign: 'center',
+    },
+    datePickerTextActive: {
+        color: Brand.colors.white,
+    },
+    timeChipsRow: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: Brand.spacing.sm,
     },
     timeOfDayChips: {
         flexDirection: 'row',

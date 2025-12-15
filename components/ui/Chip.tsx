@@ -11,6 +11,7 @@ import { Brand } from '../../constants/brand';
 interface ChipProps {
     label: string;
     active?: boolean;
+    activeColor?: string; // Custom color when active
     onPress?: () => void;
     style?: ViewStyle;
     textStyle?: TextStyle;
@@ -23,6 +24,7 @@ interface ChipProps {
 export default function Chip({
     label,
     active = false,
+    activeColor,
     onPress,
     style,
     textStyle,
@@ -43,13 +45,19 @@ export default function Chip({
         lg: { fontSize: 16 },
     };
 
+    // Use custom activeColor if provided, otherwise use default accent
+    const activeStyles = active ? (activeColor
+        ? { backgroundColor: activeColor, borderColor: activeColor }
+        : styles.activeChip
+    ) : {};
+
     return (
         <TouchableOpacity
             style={[
                 styles.chip,
                 sizeStyles[size],
                 variant === 'date' && styles.dateChip,
-                active && styles.activeChip,
+                activeStyles,
                 disabled && styles.disabledChip,
                 style,
             ]}
@@ -86,6 +94,8 @@ const styles = StyleSheet.create({
     dateChip: {
         flex: 1,
         justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: 48,
     },
     activeChip: {
         backgroundColor: Brand.colors.accent,

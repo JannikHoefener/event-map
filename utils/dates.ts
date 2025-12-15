@@ -125,7 +125,7 @@ export function isInDateRange(date: Date, from: Date | null, to: Date | null): b
 // Time of Day Helpers
 // ============================================================================
 
-export type TimeOfDay = 'morning' | 'afternoon' | 'evening';
+import { TimeOfDay } from '../types';
 
 /**
  * Gibt die Tageszeit für eine bestimmte Stunde zurück.
@@ -133,7 +133,8 @@ export type TimeOfDay = 'morning' | 'afternoon' | 'evening';
 export function getTimeOfDay(hour: number): TimeOfDay {
     if (hour >= 6 && hour < 12) return 'morning';
     if (hour >= 12 && hour < 18) return 'afternoon';
-    return 'evening'; // 18:00 - 06:00
+    if (hour >= 18 && hour < 22) return 'evening';
+    return 'night'; // 22:00 - 06:00
 }
 
 /**
@@ -142,7 +143,8 @@ export function getTimeOfDay(hour: number): TimeOfDay {
 export function matchesTimeOfDay(hour: number, timeOfDay: TimeOfDay): boolean {
     if (timeOfDay === 'morning') return hour >= 6 && hour < 12;
     if (timeOfDay === 'afternoon') return hour >= 12 && hour < 18;
-    if (timeOfDay === 'evening') return hour >= 18 || hour < 6;
+    if (timeOfDay === 'evening') return hour >= 18 && hour < 22;
+    if (timeOfDay === 'night') return hour >= 22 || hour < 6;
     return false;
 }
 

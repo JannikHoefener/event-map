@@ -9,6 +9,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from 'react-nativ
 import { MapPin, Clock } from 'lucide-react-native';
 import { Brand } from '../../constants/brand';
 import { Event } from '../../types';
+import { getCategoryColor, getCategoryLabel } from '../../data/categories';
 
 interface ItemCardProps {
     event: Event;
@@ -36,7 +37,12 @@ export default function ItemCard({
             {/* Image Placeholder (nur in voller Ansicht) */}
             {!compact && (
                 <View style={styles.imagePlaceholder}>
-                    <Text style={styles.categoryBadge}>{event.category}</Text>
+                    <Text style={[
+                        styles.categoryBadge,
+                        { backgroundColor: getCategoryColor(event.category) }
+                    ]}>
+                        {getCategoryLabel(event.category)}
+                    </Text>
                 </View>
             )}
 
@@ -85,7 +91,7 @@ const styles = StyleSheet.create({
         padding: Brand.spacing.md,
     },
     categoryBadge: {
-        backgroundColor: 'rgba(0,0,0,0.6)',
+        backgroundColor: Brand.colors.accent,
         paddingHorizontal: 10,
         paddingVertical: 4,
         borderRadius: Brand.radius.sm,

@@ -11,7 +11,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Calendar } from 'lucide-react-native';
 import { Brand } from '../../constants/brand';
 import { ActiveFilters, TimeOfDay } from '../../types';
-import { CATEGORIES, TIME_SLOTS, INDOOR_OPTIONS, DAY_PRESETS } from '../../data/categories';
+import { CATEGORIES, TIME_SLOTS, INDOOR_OPTIONS, DAY_PRESETS, getCategoryColor } from '../../data/categories';
 import { createEmptyFilters, toggleCategory, toggleTimeOfDay } from '../../utils/filters';
 import { formatDateShort } from '../../utils/dates';
 import {
@@ -176,13 +176,14 @@ export default function FilterModal({
                 </View>
 
                 {/* Tag (Day) - Second Row */}
-                <View style={styles.chipContainer}>
+                <View style={styles.dateRow}>
                     {DAY_PRESETS.secondRow.map((day) => (
                         <Chip
                             key={day.id}
                             label={day.label}
                             active={filters.when === day.id}
                             onPress={() => handleWhenSelect(day.id)}
+                            variant="date"
                         />
                     ))}
                 </View>
@@ -265,6 +266,7 @@ export default function FilterModal({
                             key={cat.id}
                             label={cat.displayLabel}
                             active={filters.categories.includes(cat.id)}
+                            activeColor={getCategoryColor(cat.id)}
                             onPress={() => handleToggleCategory(cat.id)}
                         />
                     ))}

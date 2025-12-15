@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     bar: {
         flexDirection: 'row',
         backgroundColor: Brand.theme.light.surfaceBlurStrong,
+        //backgroundColor:Brand.colors.accentDark,
         borderRadius: Brand.components.actionBar.borderRadius,
         padding: Brand.components.actionBar.padding,
         overflow: 'hidden',

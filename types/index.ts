@@ -40,7 +40,7 @@ export type WhenFilter =
 
 export type IndoorFilter = 'any' | 'indoor' | 'outdoor';
 
-export type TimeOfDay = 'morning' | 'afternoon' | 'evening';
+export type TimeOfDay = 'morning' | 'afternoon' | 'evening' | 'night';
 
 export interface ActiveFilters {
     when: WhenFilter;
@@ -79,6 +79,7 @@ export interface TimeSlot {
     id: TimeOfDay;
     label: string;
     time: string;
+    emoji?: string;
 }
 
 // ============================================================================

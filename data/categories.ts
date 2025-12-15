@@ -1,103 +1,274 @@
 /**
- * Categories Data
+ * Categories & Filter Options
  * 
- * Zentrale Definition aller Event-Kategorien.
+ * Zentrale Definitionen für Event-Kategorien und Filter-Optionen.
+ * Fokus auf Aktivitäten und Ausgeh-Events.
  */
 
-import { Category, TimeSlot } from '../types';
+import { Category, TimeSlot, WhenFilter, IndoorFilter, TimeOfDay } from '../types';
 
 // ============================================================================
-// Event Categories
+// Event Categories - Activity-focused
 // ============================================================================
 
 export const CATEGORIES: Category[] = [
-    { id: 'musik', label: 'Musik', emoji: '🎵', displayLabel: '🎵 Musik' },
-    { id: 'café', label: 'Café', emoji: '☕', displayLabel: '☕ Café' },
-    { id: 'desserts', label: 'Desserts', emoji: '🍰', displayLabel: '🍰 Desserts' },
-    { id: 'drinks', label: 'Drinks', emoji: '🥤', displayLabel: '🥤 Drinks' },
-    { id: 'grill_bbq', label: 'Grill & BBQ', emoji: '🔥', displayLabel: '🔥 Grill & BBQ' },
-    { id: 'pizza', label: 'Pizza', emoji: '🍕', displayLabel: '🍕 Pizza' },
-    { id: 'frühstück', label: 'Frühstück', emoji: '🍳', displayLabel: '🍳 Frühstück' },
-    { id: 'vegan', label: 'Vegan', emoji: '🥗', displayLabel: '🥗 Vegan' },
-    { id: 'burger', label: 'Burger', emoji: '🍔', displayLabel: '🍔 Burger' },
-    { id: 'italienisch', label: 'Italienisch', emoji: '🇮🇹', displayLabel: '🇮🇹 Italienisch' },
-    { id: 'pasta', label: 'Pasta', emoji: '🍝', displayLabel: '🍝 Pasta' },
-    { id: 'bowls', label: 'Bowls', emoji: '🥣', displayLabel: '🥣 Bowls' },
-    { id: 'healthy', label: 'Healthy', emoji: '🥗', displayLabel: '🥗 Healthy' },
-    { id: 'asiatisch', label: 'Asiatisch', emoji: '🍜', displayLabel: '🍜 Asiatisch' },
-    { id: 'fast_food', label: 'Fast Food', emoji: '🍟', displayLabel: '🍟 Fast Food' },
-    { id: 'seafood', label: 'Seafood', emoji: '🦞', displayLabel: '🦞 Seafood' },
-    { id: 'sushi', label: 'Sushi', emoji: '🍣', displayLabel: '🍣 Sushi' },
-    { id: 'deutsch', label: 'Deutsch', emoji: '🥨', displayLabel: '🥨 Deutsch' },
-    { id: 'kunst', label: 'Kunst', emoji: '🎨', displayLabel: '🎨 Kunst' },
-    { id: 'party', label: 'Party', emoji: '🎉', displayLabel: '🎉 Party' },
+    // Nightlife & Party
+    { id: 'party', label: 'Party', emoji: '�', displayLabel: '� Party' },
+    { id: 'club', label: 'Club', emoji: '🪩', displayLabel: '🪩 Club' },
+    { id: 'konzert', label: 'Konzert', emoji: '�', displayLabel: '� Konzert' },
+    { id: 'livemusik', label: 'Live Musik', emoji: '🎤', displayLabel: '🎤 Live Musik' },
+    { id: 'dj', label: 'DJ Set', emoji: '🎧', displayLabel: '🎧 DJ Set' },
+
+    // Drinks & Bars
+    { id: 'bar', label: 'Bar', emoji: '🍹', displayLabel: '🍹 Bar' },
+    { id: 'cocktails', label: 'Cocktails', emoji: '🍸', displayLabel: '🍸 Cocktails' },
+    { id: 'bier', label: 'Bier', emoji: '🍺', displayLabel: '🍺 Bier' },
+    { id: 'wein', label: 'Wein', emoji: '�', displayLabel: '� Wein' },
+    { id: 'craft', label: 'Craft Beer', emoji: '�', displayLabel: '� Craft Beer' },
+
+    // Food & Dining
+    { id: 'restaurant', label: 'Restaurant', emoji: '🍽️', displayLabel: '🍽️ Restaurant' },
+    { id: 'cafe', label: 'Café', emoji: '☕', displayLabel: '☕ Café' },
+    { id: 'brunch', label: 'Brunch', emoji: '🥐', displayLabel: '🥐 Brunch' },
+    { id: 'streetfood', label: 'Street Food', emoji: '🌮', displayLabel: '🌮 Street Food' },
+
+    // Entertainment & Culture
+    { id: 'comedy', label: 'Comedy', emoji: '😂', displayLabel: '😂 Comedy' },
+    { id: 'quiz', label: 'Quiz Night', emoji: '🧠', displayLabel: '🧠 Quiz Night' },
+    { id: 'karaoke', label: 'Karaoke', emoji: '�️', displayLabel: '�️ Karaoke' },
+    { id: 'show', label: 'Show', emoji: '🎭', displayLabel: '🎭 Show' },
+    { id: 'theater', label: 'Theater', emoji: '🎪', displayLabel: '🎪 Theater' },
+    { id: 'kino', label: 'Kino', emoji: '🎬', displayLabel: '🎬 Kino' },
+
+    // Sports & Activities
+    { id: 'sport', label: 'Sport Event', emoji: '⚽', displayLabel: '⚽ Sport Event' },
+    { id: 'games', label: 'Games', emoji: '�', displayLabel: '� Games' },
+    { id: 'darts', label: 'Darts', emoji: '🎯', displayLabel: '🎯 Darts' },
+    { id: 'billard', label: 'Billard', emoji: '🎱', displayLabel: '🎱 Billard' },
+
+    // Art & Culture
+    { id: 'kunst', label: 'Kunst', emoji: '�', displayLabel: '� Kunst' },
+    { id: 'ausstellung', label: 'Ausstellung', emoji: '🖼️', displayLabel: '🖼️ Ausstellung' },
+    { id: 'lesung', label: 'Lesung', emoji: '📚', displayLabel: '📚 Lesung' },
+
+    // Special Events
+    { id: 'festival', label: 'Festival', emoji: '🎪', displayLabel: '🎪 Festival' },
+    { id: 'markt', label: 'Markt', emoji: '🛍️', displayLabel: '🛍️ Markt' },
+    { id: 'openair', label: 'Open Air', emoji: '�', displayLabel: '� Open Air' },
+    { id: 'rooftop', label: 'Rooftop', emoji: '🌆', displayLabel: '🌆 Rooftop' },
+
+    // Social
+    { id: 'dating', label: 'Dating Event', emoji: '💕', displayLabel: '💕 Dating' },
+    { id: 'networking', label: 'Networking', emoji: '🤝', displayLabel: '🤝 Networking' },
+    { id: 'workshop', label: 'Workshop', emoji: '🛠️', displayLabel: '🛠️ Workshop' },
 ];
+
+// ============================================================================
+// Popular/Featured Categories (Quick Access)
+// ============================================================================
+
+export const POPULAR_CATEGORIES: string[] = [
+    'party',
+    'konzert',
+    'bar',
+    'cocktails',
+    'bier',
+    'cafe',
+    'restaurant',
+    'quiz',
+    'comedy',
+    'livemusik',
+];
+
+// Get popular categories as full objects
+export const getPopularCategories = (): Category[] => {
+    return POPULAR_CATEGORIES
+        .map(id => CATEGORIES.find(cat => cat.id === id))
+        .filter((cat): cat is Category => cat !== undefined);
+};
 
 // ============================================================================
 // Time Slots
 // ============================================================================
 
 export const TIME_SLOTS: TimeSlot[] = [
-    { id: 'morning', label: '🌅 Morgens', time: '06:00-12:00' },
-    { id: 'afternoon', label: '☀️ Mittags', time: '12:00-18:00' },
-    { id: 'evening', label: '🌙 Abends', time: '18:00-00:00' },
+    { id: 'morning', label: 'Morgens', time: '6-12 Uhr', emoji: '🌅' },
+    { id: 'afternoon', label: 'Mittags', time: '12-18 Uhr', emoji: '☀️' },
+    { id: 'evening', label: 'Abends', time: '18-22 Uhr', emoji: '🌆' },
+    { id: 'night', label: 'Nachts', time: '22-6 Uhr', emoji: '🌙' },
 ];
 
 // ============================================================================
 // Indoor/Outdoor Options
 // ============================================================================
 
-export const INDOOR_OPTIONS = [
-    { id: 'indoor', label: 'Drinnen' },
-    { id: 'outdoor', label: 'Draußen' },
-    { id: 'any', label: 'Egal' },
-] as const;
+export const INDOOR_OPTIONS: { id: IndoorFilter; label: string; emoji: string }[] = [
+    { id: 'any', label: 'Egal', emoji: '🌍' },
+    { id: 'indoor', label: 'Drinnen', emoji: '🏠' },
+    { id: 'outdoor', label: 'Draußen', emoji: '🌳' },
+];
 
 // ============================================================================
-// Day Presets
+// Day Presets (Quick Filters)
 // ============================================================================
 
 export const DAY_PRESETS = {
+    // Reihe 1: Heute, Morgen, Ü-Morgen
     firstRow: [
-        { id: 'today', label: 'Heute' },
-        { id: 'tomorrow', label: 'Morgen' },
-        { id: 'dayAfterTomorrow', label: 'Übermorgen' },
+        { id: 'today' as WhenFilter, label: 'Heute' },
+        { id: 'tomorrow' as WhenFilter, label: 'Morgen' },
+        { id: 'dayAfterTomorrow' as WhenFilter, label: 'in 2 Tagen' },
     ],
+    // Reihe 2: Wochenende, Nächste Woche, Egal wann
     secondRow: [
-        { id: 'weekend', label: 'Wochenende' },
-        { id: 'any', label: 'Egal' },
+        { id: 'weekend' as WhenFilter, label: 'Wochen-ende' },
+        { id: 'nextWeek' as WhenFilter, label: 'in 1 Woche' },
+        { id: 'any' as WhenFilter, label: 'Egal' },
     ],
-} as const;
+};
+
+// ============================================================================
+// Category Groups (for organized display)
+// ============================================================================
+
+export const CATEGORY_GROUPS = {
+    nightlife: {
+        title: 'Nightlife & Party',
+        emoji: '🎉',
+        color: '#1E3A5F',  // Dark Blue
+        ids: ['party', 'club', 'konzert', 'livemusik', 'dj'],
+    },
+    drinks: {
+        title: 'Drinks & Bars',
+        emoji: '🍹',
+        color: '#9B2335',  // Wine Red / Burgundy
+        ids: ['bar', 'cocktails', 'bier', 'wein', 'craft'],
+    },
+    food: {
+        title: 'Food & Dining',
+        emoji: '🍽️',
+        color: '#D4763B',  // Warm Orange
+        ids: ['restaurant', 'cafe', 'brunch', 'streetfood'],
+    },
+    entertainment: {
+        title: 'Entertainment',
+        emoji: '🎭',
+        color: '#7B3F8F',  // Purple
+        ids: ['comedy', 'quiz', 'karaoke', 'show', 'theater', 'kino'],
+    },
+    activities: {
+        title: 'Aktivitäten',
+        emoji: '🎮',
+        color: '#2D8C5A',  // Green
+        ids: ['sport', 'games', 'darts', 'billard'],
+    },
+    culture: {
+        title: 'Kunst & Kultur',
+        emoji: '🎨',
+        color: '#C76B98',  // Pink / Rose
+        ids: ['kunst', 'ausstellung', 'lesung'],
+    },
+    special: {
+        title: 'Special Events',
+        emoji: '🌟',
+        color: '#D4A030',  // Gold
+        ids: ['festival', 'markt', 'openair', 'rooftop'],
+    },
+    social: {
+        title: 'Social',
+        emoji: '🤝',
+        color: '#3498DB',  // Light Blue
+        ids: ['dating', 'networking', 'workshop'],
+    },
+};
 
 // ============================================================================
 // Helper Functions
 // ============================================================================
 
 /**
- * Findet eine Kategorie anhand ihrer ID.
+ * Get category by ID
  */
-export function getCategoryById(id: string): Category | undefined {
+export const getCategoryById = (id: string): Category | undefined => {
     return CATEGORIES.find(cat => cat.id === id);
-}
+};
 
 /**
- * Gibt alle Kategorie-Labels zurück (für Anzeigezwecke).
+ * Get categories by IDs
  */
-export function getCategoryDisplayLabels(): string[] {
-    return CATEGORIES.map(cat => cat.displayLabel);
-}
+export const getCategoriesByIds = (ids: string[]): Category[] => {
+    return ids
+        .map(id => getCategoryById(id))
+        .filter((cat): cat is Category => cat !== undefined);
+};
 
 /**
- * Konvertiert einen Display-Label zurück zur Kategorie-ID.
+ * Get category display label by ID
  */
-export function getCategoryIdFromDisplayLabel(displayLabel: string): string {
-    const label = displayLabel.split(' ').slice(1).join(' ');
-    return label.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_');
-}
+export const getCategoryLabel = (id: string): string => {
+    const category = getCategoryById(id);
+    return category?.displayLabel || id;
+};
 
 /**
- * Findet einen TimeSlot anhand seiner ID.
+ * Get category emoji by ID
  */
-export function getTimeSlotById(id: string): TimeSlot | undefined {
+export const getCategoryEmoji = (id: string): string => {
+    const category = getCategoryById(id);
+    return category?.emoji || '📍';
+};
+
+/**
+ * Get time slot by ID
+ */
+export const getTimeSlotById = (id: TimeOfDay): TimeSlot | undefined => {
     return TIME_SLOTS.find(slot => slot.id === id);
-}
+};
+
+/**
+ * Get time slot label by ID
+ */
+export const getTimeSlotLabel = (id: TimeOfDay): string => {
+    const slot = getTimeSlotById(id);
+    return slot?.label || id;
+};
+
+/**
+ * Get categories by group
+ */
+export const getCategoriesByGroup = (groupKey: keyof typeof CATEGORY_GROUPS): Category[] => {
+    const group = CATEGORY_GROUPS[groupKey];
+    return getCategoriesByIds(group.ids);
+};
+
+/**
+ * Get category group by category ID
+ */
+export const getCategoryGroup = (categoryId: string): keyof typeof CATEGORY_GROUPS | null => {
+    for (const [key, group] of Object.entries(CATEGORY_GROUPS)) {
+        if (group.ids.includes(categoryId)) {
+            return key as keyof typeof CATEGORY_GROUPS;
+        }
+    }
+    return null;
+};
+
+/**
+ * Get category color by category ID
+ * Returns the group color for the category
+ */
+export const getCategoryColor = (categoryId: string): string => {
+    const groupKey = getCategoryGroup(categoryId);
+    if (groupKey) {
+        return CATEGORY_GROUPS[groupKey].color;
+    }
+    // Default color (Rust Red from brand)
+    return '#B73B00';
+};
+
+/**
+ * Get group color by group key
+ */
+export const getGroupColor = (groupKey: keyof typeof CATEGORY_GROUPS): string => {
+    return CATEGORY_GROUPS[groupKey].color;
+};
