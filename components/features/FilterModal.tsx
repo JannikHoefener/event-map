@@ -161,29 +161,15 @@ export default function FilterModal({
             {/* Content */}
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
 
-                {/* Tag (Day) - First Row */}
+                {/* Tag (Day) */}
                 <SectionTitle title="Tag" marginTop={0} />
-                <View style={styles.dateRow}>
-                    {DAY_PRESETS.firstRow.map((day) => (
+                <View style={styles.chipContainer}>
+                    {DAY_PRESETS.main.map((day) => (
                         <Chip
                             key={day.id}
                             label={day.label}
                             active={filters.when === day.id}
                             onPress={() => handleWhenSelect(day.id)}
-                            variant="date"
-                        />
-                    ))}
-                </View>
-
-                {/* Tag (Day) - Second Row */}
-                <View style={styles.dateRow}>
-                    {DAY_PRESETS.secondRow.map((day) => (
-                        <Chip
-                            key={day.id}
-                            label={day.label}
-                            active={filters.when === day.id}
-                            onPress={() => handleWhenSelect(day.id)}
-                            variant="date"
                         />
                     ))}
                 </View>
@@ -297,10 +283,16 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
     },
+    /* chipContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: Brand.spacing.sm,
+    }, */
     chipContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: Brand.spacing.sm,
+        marginBottom: Brand.spacing.md,
     },
     dateRow: {
         flexDirection: 'row',

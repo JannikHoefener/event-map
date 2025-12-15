@@ -113,17 +113,26 @@ export const INDOOR_OPTIONS: { id: IndoorFilter; label: string; emoji: string }[
 // ============================================================================
 
 export const DAY_PRESETS = {
-    // Reihe 1: Heute, Morgen, Ü-Morgen
-    firstRow: [
+    // Hauptauswahl: Heute, Morgen, Fr, Sa, So (ohne Egal - togglebar)
+    main: [
         { id: 'today' as WhenFilter, label: 'Heute' },
         { id: 'tomorrow' as WhenFilter, label: 'Morgen' },
-        { id: 'dayAfterTomorrow' as WhenFilter, label: 'in 2 Tagen' },
+        { id: 'friday' as WhenFilter, label: 'Fr' },
+        { id: 'saturday' as WhenFilter, label: 'Sa' },
+        { id: 'sunday' as WhenFilter, label: 'So' },
     ],
-    // Reihe 2: Wochenende, Nächste Woche, Egal wann
-    secondRow: [
-        { id: 'weekend' as WhenFilter, label: 'Wochen-ende' },
-        { id: 'nextWeek' as WhenFilter, label: 'in 1 Woche' },
+    // Legacy support (für Kompatibilität)
+    firstRow: [
         { id: 'any' as WhenFilter, label: 'Egal' },
+        { id: 'today' as WhenFilter, label: 'Heute' },
+        { id: 'tomorrow' as WhenFilter, label: 'Morgen' },
+
+    ],
+    secondRow: [
+        { id: 'friday' as WhenFilter, label: 'Fr' },
+        { id: 'saturday' as WhenFilter, label: 'Sa' },
+        { id: 'sunday' as WhenFilter, label: 'So' },
+
     ],
 };
 

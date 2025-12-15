@@ -9,7 +9,9 @@ import {
     getToday,
     getTomorrow,
     getDayAfterTomorrow,
+    getNextFriday,
     getNextSaturday,
+    getNextSunday,
     getMondayAfterWeekend,
     isInDateRange,
     matchesAnyTimeOfDay,
@@ -87,6 +89,27 @@ export function matchesWhenFilter(
         case 'tomorrow':
             return eventDate >= tomorrow && eventDate < dayAfterTomorrow;
 
+        case 'friday': {
+            const friday = getNextFriday();
+            const nextDay = new Date(friday);
+            nextDay.setDate(nextDay.getDate() + 1);
+            return eventDate >= friday && eventDate < nextDay;
+        }
+
+        case 'saturday': {
+            const saturday = getNextSaturday();
+            const nextDay = new Date(saturday);
+            nextDay.setDate(nextDay.getDate() + 1);
+            return eventDate >= saturday && eventDate < nextDay;
+        }
+
+        case 'sunday': {
+            const sunday = getNextSunday();
+            const nextDay = new Date(sunday);
+            nextDay.setDate(nextDay.getDate() + 1);
+            return eventDate >= sunday && eventDate < nextDay;
+        }
+
         case 'dayAfterTomorrow': {
             const nextDay = new Date(dayAfterTomorrow);
             nextDay.setDate(nextDay.getDate() + 1);
@@ -97,6 +120,15 @@ export function matchesWhenFilter(
             const saturday = getNextSaturday();
             const monday = getMondayAfterWeekend();
             return eventDate >= saturday && eventDate < monday;
+        }
+
+        case 'nextWeek': {
+            const today = getToday();
+            const nextWeekStart = new Date(today);
+            nextWeekStart.setDate(today.getDate() + 7);
+            const nextWeekEnd = new Date(nextWeekStart);
+            nextWeekEnd.setDate(nextWeekStart.getDate() + 7);
+            return eventDate >= nextWeekStart && eventDate < nextWeekEnd;
         }
 
         case 'custom':

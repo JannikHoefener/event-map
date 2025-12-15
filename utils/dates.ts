@@ -51,16 +51,45 @@ export function getDayAfterTomorrow(): Date {
 }
 
 /**
+ * Gibt den nächsten Freitag um Mitternacht zurück.
+ */
+export function getNextFriday(): Date {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dayOfWeek = today.getDay();
+    // Friday is 5, calculate days until next Friday
+    const daysUntilFriday = dayOfWeek === 5 ? 0 : (5 - dayOfWeek + 7) % 7;
+    const friday = new Date(today);
+    friday.setDate(today.getDate() + daysUntilFriday);
+    return friday;
+}
+
+/**
  * Gibt den nächsten Samstag um Mitternacht zurück.
  */
 export function getNextSaturday(): Date {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const dayOfWeek = today.getDay();
-    const daysUntilSaturday = (6 - dayOfWeek + 7) % 7;
+    // Saturday is 6
+    const daysUntilSaturday = dayOfWeek === 6 ? 0 : (6 - dayOfWeek + 7) % 7;
     const saturday = new Date(today);
     saturday.setDate(today.getDate() + daysUntilSaturday);
     return saturday;
+}
+
+/**
+ * Gibt den nächsten Sonntag um Mitternacht zurück.
+ */
+export function getNextSunday(): Date {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dayOfWeek = today.getDay();
+    // Sunday is 0
+    const daysUntilSunday = dayOfWeek === 0 ? 0 : (7 - dayOfWeek) % 7;
+    const sunday = new Date(today);
+    sunday.setDate(today.getDate() + daysUntilSunday);
+    return sunday;
 }
 
 /**

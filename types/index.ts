@@ -34,8 +34,12 @@ export type WhenFilter =
     | 'any'
     | 'today'
     | 'tomorrow'
+    | 'friday'
+    | 'saturday'
+    | 'sunday'
     | 'dayAfterTomorrow'
     | 'weekend'
+    | 'nextWeek'
     | 'custom';
 
 export type IndoorFilter = 'any' | 'indoor' | 'outdoor';

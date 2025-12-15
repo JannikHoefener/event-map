@@ -124,42 +124,22 @@ export default function SmartFilter({
             {/* Tag Section */}
             <SectionTitle title="Tag" marginTop={0} />
 
-            {/* Day Presets - Row 1 */}
-            <View style={styles.dateRow}>
-                {DAY_PRESETS.firstRow.map((day) => (
+            {/* Day Presets - Single Row */}
+            <View style={styles.chipContainer}>
+                {DAY_PRESETS.main.map((day) => (
                     <Chip
                         key={day.id}
                         label={day.label}
                         active={filters.when === day.id}
                         onPress={() =>
-                            setFilters({
-                                ...filters,
-                                when: day.id,
+                            setFilters(prev => ({
+                                ...prev,
+                                // Toggle: If same day is clicked again, set to 'any'
+                                when: prev.when === day.id ? 'any' : day.id,
                                 dateFrom: null,
                                 dateTo: null,
-                            })
+                            }))
                         }
-                        variant="date"
-                    />
-                ))}
-            </View>
-
-            {/* Day Presets - Row 2 */}
-            <View style={styles.dateRow}>
-                {DAY_PRESETS.secondRow.map((day) => (
-                    <Chip
-                        key={day.id}
-                        label={day.label}
-                        active={filters.when === day.id}
-                        onPress={() =>
-                            setFilters({
-                                ...filters,
-                                when: day.id,
-                                dateFrom: null,
-                                dateTo: null,
-                            })
-                        }
-                        variant="date"
                     />
                 ))}
             </View>
@@ -422,6 +402,12 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingVertical: Brand.spacing.md,
+    },
+    chipContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: Brand.spacing.sm,
+        marginBottom: Brand.spacing.md,
     },
     optionsGrid: {
         flexDirection: 'row',
