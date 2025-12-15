@@ -1,16 +1,14 @@
+/**
+ * ItemCard Component
+ * 
+ * Event-Card für die Anzeige von Events in Liste und auf der Karte.
+ */
+
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { MapPin, Clock } from 'lucide-react-native';
-import { Colors } from '../../constants/Colors';
-
-interface Event {
-    id: string;
-    title: string;
-    category: string;
-    price: string;
-    time: string;
-    indoor: boolean;
-}
+import { Brand } from '../../constants/brand';
+import { Event } from '../../types';
 
 interface ItemCardProps {
     event: Event;
@@ -19,33 +17,48 @@ interface ItemCardProps {
     compact?: boolean;
 }
 
-export default function ItemCard({ event, onPress, style, compact = false }: ItemCardProps) {
+export default function ItemCard({
+    event,
+    onPress,
+    style,
+    compact = false,
+}: ItemCardProps) {
     return (
         <TouchableOpacity
-            style={[styles.card, compact && styles.compactCard, style]}
+            style={[
+                styles.card,
+                compact && styles.compactCard,
+                style,
+            ]}
             onPress={onPress}
             activeOpacity={0.9}
         >
+            {/* Image Placeholder (nur in voller Ansicht) */}
             {!compact && (
                 <View style={styles.imagePlaceholder}>
                     <Text style={styles.categoryBadge}>{event.category}</Text>
                 </View>
             )}
 
+            {/* Content */}
             <View style={styles.content}>
                 <View style={styles.header}>
-                    <Text style={styles.title} numberOfLines={1}>{event.title}</Text>
+                    <Text style={styles.title} numberOfLines={1}>
+                        {event.title}
+                    </Text>
                     <Text style={styles.price}>{event.price}</Text>
                 </View>
 
                 <View style={styles.details}>
                     <View style={styles.detailRow}>
-                        <Clock size={14} color={Colors.light.tabIconDefault} />
+                        <Clock size={14} color={Brand.theme.light.tabIconDefault} />
                         <Text style={styles.detailText}>{event.time}</Text>
                     </View>
                     <View style={styles.detailRow}>
-                        <MapPin size={14} color={Colors.light.tabIconDefault} />
-                        <Text style={styles.detailText}>{event.indoor ? 'Indoor' : 'Outdoor'}</Text>
+                        <MapPin size={14} color={Brand.theme.light.tabIconDefault} />
+                        <Text style={styles.detailText}>
+                            {event.indoor ? 'Indoor' : 'Outdoor'}
+                        </Text>
                     </View>
                 </View>
             </View>
@@ -55,14 +68,10 @@ export default function ItemCard({ event, onPress, style, compact = false }: Ite
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: 'white',
-        borderRadius: 16,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-        elevation: 2,
+        backgroundColor: Brand.colors.white,
+        borderRadius: Brand.radius.card,
         overflow: 'hidden',
+        ...Brand.shadows.md,
     },
     compactCard: {
         flexDirection: 'row',
@@ -70,54 +79,54 @@ const styles = StyleSheet.create({
     },
     imagePlaceholder: {
         height: 120,
-        backgroundColor: '#E5E7EB',
+        backgroundColor: Brand.colors.gray[200],
         justifyContent: 'flex-end',
         alignItems: 'flex-start',
-        padding: 12,
+        padding: Brand.spacing.md,
     },
     categoryBadge: {
         backgroundColor: 'rgba(0,0,0,0.6)',
         paddingHorizontal: 10,
         paddingVertical: 4,
-        borderRadius: 12,
+        borderRadius: Brand.radius.sm,
         overflow: 'hidden',
-        color: 'white',
-        fontSize: 12,
-        fontWeight: '600',
+        color: Brand.colors.white,
+        fontSize: Brand.typography.fontSize.sm,
+        fontWeight: Brand.typography.fontWeight.semibold,
     },
     content: {
-        padding: 16,
+        padding: Brand.spacing.lg,
         flex: 1,
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        marginBottom: 8,
+        marginBottom: Brand.spacing.sm,
     },
     title: {
-        fontSize: 18,
-        fontWeight: '700',
-        color: Colors.light.text,
+        fontSize: Brand.typography.fontSize.xl,
+        fontWeight: Brand.typography.fontWeight.bold,
+        color: Brand.theme.light.text,
         flex: 1,
-        marginRight: 8,
+        marginRight: Brand.spacing.sm,
     },
     price: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: Colors.light.primary,
+        fontSize: Brand.typography.fontSize.lg,
+        fontWeight: Brand.typography.fontWeight.semibold,
+        color: Brand.colors.primary,
     },
     details: {
         flexDirection: 'row',
-        gap: 16,
+        gap: Brand.spacing.lg,
     },
     detailRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 4,
+        gap: Brand.spacing.xs,
     },
     detailText: {
-        fontSize: 14,
-        color: Colors.light.tabIconDefault,
+        fontSize: Brand.typography.fontSize.base,
+        color: Brand.theme.light.tabIconDefault,
     },
 });
