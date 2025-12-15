@@ -138,10 +138,29 @@ export const BorderRadius = {
 } as const;
 
 // ============================================================================
-// Typography
+// Typography - Outfit (similar to Neuething)
 // ============================================================================
 
+export const FontFamily = {
+    // Outfit - Modern geometric sans-serif
+    thin: 'Outfit_100Thin',
+    extraLight: 'Outfit_200ExtraLight',
+    light: 'Outfit_300Light',
+    regular: 'Outfit_400Regular',
+    medium: 'Outfit_500Medium',
+    semibold: 'Outfit_600SemiBold',
+    bold: 'Outfit_700Bold',
+    extraBold: 'Outfit_800ExtraBold',
+    black: 'Outfit_900Black',
+
+    // Fallback for system
+    system: undefined, // Uses system default
+} as const;
+
 export const Typography = {
+    // Font Family
+    fontFamily: FontFamily,
+
     // Font Sizes
     fontSize: {
         xs: 11,
@@ -153,22 +172,104 @@ export const Typography = {
         xxl: 22,
         xxxl: 24,
         title: 28,
+        hero: 32,
+        display: 40,
     },
 
-    // Font Weights
+    // Font Weights (mapped to font files)
     fontWeight: {
+        thin: '100' as const,
+        extraLight: '200' as const,
+        light: '300' as const,
         regular: '400' as const,
         medium: '500' as const,
         semibold: '600' as const,
         bold: '700' as const,
         extrabold: '800' as const,
+        black: '900' as const,
     },
 
     // Line Heights
     lineHeight: {
-        tight: 1.2,
-        normal: 1.5,
-        relaxed: 1.75,
+        tight: 1.1,
+        normal: 1.4,
+        relaxed: 1.6,
+    },
+
+    // Letter Spacing
+    letterSpacing: {
+        tight: -0.5,
+        normal: 0,
+        wide: 0.5,
+        wider: 1,
+        widest: 2,
+    },
+
+    // Heading Presets - Ready-to-use heading styles
+    headings: {
+        h1: {
+            fontFamily: 'Outfit_800ExtraBold',
+            fontSize: 32,
+            fontWeight: '800' as const,
+            letterSpacing: -0.5,
+            lineHeight: 1.1,
+        },
+        h2: {
+            fontFamily: 'Outfit_700Bold',
+            fontSize: 24,
+            fontWeight: '700' as const,
+            letterSpacing: -0.3,
+            lineHeight: 1.2,
+        },
+        h3: {
+            fontFamily: 'Outfit_600SemiBold',
+            fontSize: 20,
+            fontWeight: '600' as const,
+            letterSpacing: 0,
+            lineHeight: 1.3,
+        },
+        h4: {
+            fontFamily: 'Outfit_600SemiBold',
+            fontSize: 18,
+            fontWeight: '600' as const,
+            letterSpacing: 0,
+            lineHeight: 1.3,
+        },
+        subtitle: {
+            fontFamily: 'Outfit_500Medium',
+            fontSize: 16,
+            fontWeight: '500' as const,
+            letterSpacing: 0,
+            lineHeight: 1.4,
+        },
+        body: {
+            fontFamily: 'Outfit_400Regular',
+            fontSize: 14,
+            fontWeight: '400' as const,
+            letterSpacing: 0,
+            lineHeight: 1.5,
+        },
+        caption: {
+            fontFamily: 'Outfit_400Regular',
+            fontSize: 12,
+            fontWeight: '400' as const,
+            letterSpacing: 0.2,
+            lineHeight: 1.4,
+        },
+        button: {
+            fontFamily: 'Outfit_600SemiBold',
+            fontSize: 16,
+            fontWeight: '600' as const,
+            letterSpacing: 0.3,
+            lineHeight: 1.2,
+        },
+        label: {
+            fontFamily: 'Outfit_500Medium',
+            fontSize: 14,
+            fontWeight: '500' as const,
+            letterSpacing: 0.2,
+            lineHeight: 1.3,
+        },
     },
 } as const;
 

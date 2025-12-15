@@ -302,8 +302,9 @@ const styles = StyleSheet.create({
         backgroundColor: Brand.colors.primary,
     },
     filterText: {
-        fontSize: Brand.typography.fontSize.base,
-        fontWeight: Brand.typography.fontWeight.semibold,
+        fontFamily: Brand.typography.headings.label.fontFamily,
+        fontSize: Brand.typography.headings.label.fontSize,
+        fontWeight: Brand.typography.headings.label.fontWeight,
         color: Brand.theme.light.text,
     },
     activeFilterText: {

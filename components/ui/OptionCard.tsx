@@ -93,8 +93,9 @@ const styles = StyleSheet.create({
         marginBottom: Brand.spacing.xs,
     },
     label: {
-        fontSize: Brand.typography.fontSize.lg,
-        fontWeight: Brand.typography.fontWeight.semibold,
+        fontFamily: Brand.typography.headings.subtitle.fontFamily,
+        fontSize: Brand.typography.headings.subtitle.fontSize,
+        fontWeight: Brand.typography.headings.subtitle.fontWeight,
         color: Brand.theme.light.text,
         textAlign: 'center',
     },

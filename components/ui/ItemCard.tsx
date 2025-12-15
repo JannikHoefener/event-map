@@ -105,15 +105,17 @@ const styles = StyleSheet.create({
         marginBottom: Brand.spacing.sm,
     },
     title: {
-        fontSize: Brand.typography.fontSize.xl,
-        fontWeight: Brand.typography.fontWeight.bold,
+        fontFamily: Brand.typography.headings.h4.fontFamily,
+        fontSize: Brand.typography.headings.h4.fontSize,
+        fontWeight: Brand.typography.headings.h4.fontWeight,
         color: Brand.theme.light.text,
         flex: 1,
         marginRight: Brand.spacing.sm,
     },
     price: {
-        fontSize: Brand.typography.fontSize.lg,
-        fontWeight: Brand.typography.fontWeight.semibold,
+        fontFamily: Brand.typography.headings.subtitle.fontFamily,
+        fontSize: Brand.typography.headings.subtitle.fontSize,
+        fontWeight: Brand.typography.headings.subtitle.fontWeight,
         color: Brand.colors.primary,
     },
     details: {
@@ -126,7 +128,8 @@ const styles = StyleSheet.create({
         gap: Brand.spacing.xs,
     },
     detailText: {
-        fontSize: Brand.typography.fontSize.base,
+        fontFamily: Brand.typography.headings.caption.fontFamily,
+        fontSize: Brand.typography.headings.caption.fontSize,
         color: Brand.theme.light.tabIconDefault,
     },
 });

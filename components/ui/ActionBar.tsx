@@ -77,8 +77,9 @@ const styles = StyleSheet.create({
         gap: Brand.spacing.sm,
     },
     actionText: {
-        fontSize: Brand.typography.fontSize.lg,
-        fontWeight: Brand.typography.fontWeight.semibold,
+        fontFamily: Brand.typography.headings.button.fontFamily,
+        fontSize: Brand.typography.headings.button.fontSize,
+        fontWeight: Brand.typography.headings.button.fontWeight,
         color: Brand.theme.light.text,
     },
     divider: {

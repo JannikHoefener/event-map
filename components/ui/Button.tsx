@@ -120,7 +120,9 @@ const styles = StyleSheet.create({
         marginLeft: 8,
     },
     text: {
-        fontWeight: Brand.typography.fontWeight.semibold,
+        fontFamily: Brand.typography.headings.button.fontFamily,
+        fontSize: Brand.typography.headings.button.fontSize,
+        fontWeight: Brand.typography.headings.button.fontWeight,
     },
     disabled: {
         opacity: 0.5,

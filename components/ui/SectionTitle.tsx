@@ -58,7 +58,9 @@ const styles = StyleSheet.create({
         marginBottom: Brand.spacing.md,
     },
     title: {
-        fontWeight: Brand.typography.fontWeight.bold,
+        fontFamily: Brand.typography.headings.h4.fontFamily,
+        fontWeight: Brand.typography.headings.h4.fontWeight,
+        letterSpacing: Brand.typography.headings.h4.letterSpacing,
         color: Brand.theme.light.text,
     },
     titleSm: {

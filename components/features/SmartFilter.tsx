@@ -419,8 +419,10 @@ const styles = StyleSheet.create({
         marginBottom: Brand.spacing.xl,
     },
     title: {
-        fontSize: Brand.typography.fontSize.xxl,
-        fontWeight: Brand.typography.fontWeight.bold,
+        fontFamily: Brand.typography.headings.h2.fontFamily,
+        fontSize: Brand.typography.headings.h2.fontSize,
+        fontWeight: Brand.typography.headings.h2.fontWeight,
+        letterSpacing: Brand.typography.headings.h2.letterSpacing,
         color: Brand.theme.light.text,
     },
     closeButton: {

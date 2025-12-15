@@ -95,7 +95,9 @@ const styles = StyleSheet.create({
         opacity: 0.5,
     },
     chipText: {
-        fontWeight: Brand.typography.fontWeight.semibold,
+        fontFamily: Brand.typography.headings.label.fontFamily,
+        fontSize: Brand.typography.headings.label.fontSize,
+        fontWeight: Brand.typography.headings.label.fontWeight,
         color: Brand.theme.light.text,
     },
     activeChipText: {

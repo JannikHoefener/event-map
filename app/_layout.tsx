@@ -1,27 +1,47 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import {
+    useFonts,
+    Outfit_100Thin,
+    Outfit_200ExtraLight,
+    Outfit_300Light,
+    Outfit_400Regular,
+    Outfit_500Medium,
+    Outfit_600SemiBold,
+    Outfit_700Bold,
+    Outfit_800ExtraBold,
+    Outfit_900Black,
+} from '@expo-google-fonts/outfit';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
-    const [loaded] = useFonts({
-        // We can add custom fonts here later, e.g., Inter or Outfit
+
+    const [fontsLoaded] = useFonts({
+        Outfit_100Thin,
+        Outfit_200ExtraLight,
+        Outfit_300Light,
+        Outfit_400Regular,
+        Outfit_500Medium,
+        Outfit_600SemiBold,
+        Outfit_700Bold,
+        Outfit_800ExtraBold,
+        Outfit_900Black,
     });
 
     useEffect(() => {
-        if (loaded) {
+        if (fontsLoaded) {
             SplashScreen.hideAsync();
         }
-    }, [loaded]);
+    }, [fontsLoaded]);
 
-    if (!loaded) {
+    if (!fontsLoaded) {
         return null;
     }
 

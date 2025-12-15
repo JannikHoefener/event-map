@@ -62,8 +62,10 @@ const styles = StyleSheet.create({
         marginBottom: Brand.spacing.xxl,
     },
     title: {
-        fontSize: Brand.typography.fontSize.xxxl,
-        fontWeight: Brand.typography.fontWeight.extrabold,
+        fontFamily: Brand.typography.headings.h2.fontFamily,
+        fontSize: Brand.typography.headings.h2.fontSize,
+        fontWeight: Brand.typography.headings.h2.fontWeight,
+        letterSpacing: Brand.typography.headings.h2.letterSpacing,
         color: Brand.theme.light.text,
     },
     actions: {
@@ -78,8 +80,9 @@ const styles = StyleSheet.create({
         borderRadius: Brand.radius.chip,
     },
     actionText: {
-        fontSize: Brand.typography.fontSize.base,
-        fontWeight: Brand.typography.fontWeight.semibold,
+        fontFamily: Brand.typography.headings.label.fontFamily,
+        fontSize: Brand.typography.headings.label.fontSize,
+        fontWeight: Brand.typography.headings.label.fontWeight,
         color: Brand.theme.light.text,
     },
     closeButton: {
