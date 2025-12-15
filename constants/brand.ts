@@ -2,49 +2,49 @@
  * Brand Configuration
  * 
  * Zentrale Design-Tokens für das Event-Map Projekt.
- * Hier werden alle Brand-Farben, Spacing, Typography und
- * andere Design-Variablen definiert.
+ * Farbpalette: Rust Red & Rose Dust
  */
 
 // ============================================================================
-// Brand Colors
+// Brand Colors - Rust Red & Rose Dust Palette
 // ============================================================================
 
 export const BrandColors = {
-    // Primary Colors
-    primary: '#6C63FF',      // Vibrant Purple/Blue
-    primaryLight: '#A5B4FC',
-    primaryDark: '#4338CA',
+    // Primary Colors - Rust Red
+    primary: '#B73B00',         // Main brand color
+    primaryLight: '#D45A20',    // Lighter variant
+    primaryDark: '#8A2C00',     // Darker variant
+    primaryMuted: '#C95A30',    // Muted version for subtle uses
 
-    // Secondary Colors  
-    secondary: '#FF6584',    // Soft Red/Pink
-    secondaryLight: '#F472B6',
-    secondaryDark: '#DB2777',
+    // Secondary Colors - Rose Dust
+    secondary: '#D4CAC7',       // Main secondary
+    secondaryLight: '#E8E2E0',  // Lighter variant
+    secondaryDark: '#B8ABA7',   // Darker variant
 
-    // Accent Colors
-    accent: '#34D399',       // Green for success/apply buttons
-    accentLight: '#6EE7B7',
-    accentDark: '#059669',
+    // Accent - Use primary for consistency
+    accent: '#B73B00',          // Same as primary for unified look
+    accentLight: '#D45A20',
+    accentDark: '#8A2C00',
 
-    // Agent/AI Gradient
-    agentGradient: ['#6C63FF', '#8B5CF6'] as const,
+    // Agent/AI Gradient - Warm rust tones
+    agentGradient: ['#B73B00', '#D45A20'] as const,
 
     // Neutral Colors
     white: '#FFFFFF',
-    black: '#000000',
+    black: '#1A1A1A',
 
-    // Gray Scale
+    // Warm Gray Scale (tinted towards Rose Dust)
     gray: {
-        50: '#F9FAFB',
-        100: '#F3F4F6',
-        200: '#E5E7EB',
-        300: '#D1D5DB',
-        400: '#9CA3AF',
-        500: '#6B7280',
-        600: '#4B5563',
-        700: '#374151',
-        800: '#1F2937',
-        900: '#111827',
+        50: '#FAF9F9',    // Very light, warm white
+        100: '#F5F3F2',   // Light warm gray
+        200: '#E8E4E3',   // Rose Dust light
+        300: '#D4CAC7',   // Rose Dust (secondary)
+        400: '#B8ABA7',   // Medium warm gray
+        500: '#9A8F8B',   // Mid gray
+        600: '#7A706C',   // Darker gray
+        700: '#5A524F',   // Dark gray
+        800: '#3A3533',   // Very dark
+        900: '#1A1817',   // Almost black
     },
 } as const;
 
@@ -54,46 +54,52 @@ export const BrandColors = {
 
 export const ThemeColors = {
     light: {
-        text: '#1A1A1A',
-        textSecondary: '#6B7280',
+        text: '#1A1817',                    // Warm black
+        textSecondary: '#7A706C',           // Muted gray
+        textMuted: '#9A8F8B',               // Even more muted
         background: '#FFFFFF',
-        backgroundSecondary: '#F9FAFB',
+        backgroundSecondary: '#FAF9F9',     // Warm white
+        backgroundTertiary: '#F5F3F2',      // Slightly darker
         card: '#FFFFFF',
-        cardHighlight: '#F8F9FA',
-        border: '#E5E7EB',
-        divider: 'rgba(0,0,0,0.1)',
-        overlay: 'rgba(0,0,0,0.5)',
-        overlayLight: 'rgba(0,0,0,0.3)',
+        cardHighlight: '#FAF9F9',
+        border: '#E8E4E3',
+        divider: 'rgba(26,24,23,0.1)',
+        overlay: 'rgba(26,24,23,0.5)',
+        overlayLight: 'rgba(26,24,23,0.3)',
         surface: '#FFFFFF',
-        surfaceBlur: 'rgba(255,255,255,0.9)',
-        surfaceBlurLight: 'rgba(255,255,255,0.7)',
-        surfaceBlurStrong: 'rgba(255,255,255,0.8)',
-        success: '#34C759',
-        error: '#FF3B30',
-        warning: '#FFCC00',
-        tabIconDefault: '#CCCCCC',
-        tabIconSelected: '#2F95DC',
+        surfaceBlur: 'rgba(255,255,255,0.95)',
+        surfaceBlurLight: 'rgba(255,255,255,0.8)',
+        surfaceBlurStrong: 'rgba(255,255,255,0.9)',
+        success: '#4A9B5C',                 // Warm green
+        error: '#C44536',                   // Warm red
+        warning: '#D4A030',                 // Warm yellow
+        tabIconDefault: '#B8ABA7',          // Rose Dust dark
+        tabIconSelected: '#B73B00',         // Rust Red
+        primary: '#B73B00',
     },
     dark: {
-        text: '#FFFFFF',
-        textSecondary: '#9CA3AF',
-        background: '#0F172A',
-        backgroundSecondary: '#1E293B',
-        card: '#1E293B',
-        cardHighlight: '#334155',
-        border: '#334155',
-        divider: 'rgba(255,255,255,0.1)',
+        text: '#FAF9F9',
+        textSecondary: '#B8ABA7',
+        textMuted: '#9A8F8B',
+        background: '#1A1817',
+        backgroundSecondary: '#2A2625',
+        backgroundTertiary: '#3A3533',
+        card: '#2A2625',
+        cardHighlight: '#3A3533',
+        border: '#4A4543',
+        divider: 'rgba(250,249,249,0.1)',
         overlay: 'rgba(0,0,0,0.7)',
         overlayLight: 'rgba(0,0,0,0.5)',
-        surface: '#1E293B',
-        surfaceBlur: 'rgba(30,41,59,0.9)',
-        surfaceBlurLight: 'rgba(30,41,59,0.7)',
-        surfaceBlurStrong: 'rgba(30,41,59,0.8)',
-        success: '#4ADE80',
-        error: '#F87171',
-        warning: '#FBBF24',
-        tabIconDefault: '#6B7280',
-        tabIconSelected: '#FFFFFF',
+        surface: '#2A2625',
+        surfaceBlur: 'rgba(42,38,37,0.95)',
+        surfaceBlurLight: 'rgba(42,38,37,0.8)',
+        surfaceBlurStrong: 'rgba(42,38,37,0.9)',
+        success: '#5AAE6C',
+        error: '#E05545',
+        warning: '#E4B040',
+        tabIconDefault: '#7A706C',
+        tabIconSelected: '#D45A20',
+        primary: '#D45A20',
     },
 } as const;
 
@@ -179,28 +185,28 @@ export const Shadows = {
         elevation: 0,
     },
     sm: {
-        shadowColor: '#000',
+        shadowColor: '#1A1817',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.05,
         shadowRadius: 2,
         elevation: 1,
     },
     md: {
-        shadowColor: '#000',
+        shadowColor: '#1A1817',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
+        shadowOpacity: 0.08,
         shadowRadius: 4,
         elevation: 2,
     },
     lg: {
-        shadowColor: '#000',
+        shadowColor: '#1A1817',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 4,
     },
     xl: {
-        shadowColor: '#000',
+        shadowColor: '#1A1817',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 12,
@@ -236,8 +242,8 @@ export const ComponentTokens = {
         paddingHorizontal: 16,
         paddingVertical: 10,
         borderRadius: BorderRadius.chip,
-        backgroundColor: BrandColors.gray[50],
-        activeBackgroundColor: BrandColors.accent,
+        backgroundColor: BrandColors.gray[100],
+        activeBackgroundColor: BrandColors.primary,
         fontSize: Typography.fontSize.base,
         fontWeight: Typography.fontWeight.semibold,
     },
@@ -253,7 +259,7 @@ export const ComponentTokens = {
     // Buttons
     button: {
         primary: {
-            backgroundColor: BrandColors.accent,
+            backgroundColor: BrandColors.primary,
             textColor: BrandColors.white,
             paddingVertical: Spacing.lg,
             borderRadius: BorderRadius.button,
@@ -277,7 +283,7 @@ export const ComponentTokens = {
         borderRadius: BorderRadius.modal,
         handleWidth: 40,
         handleHeight: 4,
-        handleColor: BrandColors.gray[200],
+        handleColor: BrandColors.gray[300],
     },
 
     // Pill (Location, etc.)
@@ -299,6 +305,12 @@ export const ComponentTokens = {
         dotSize: 10,
         activeScale: 1.2,
         lineHeight: 2,
+    },
+
+    // Map Markers
+    marker: {
+        indoor: BrandColors.primary,
+        outdoor: BrandColors.primaryLight,
     },
 } as const;
 

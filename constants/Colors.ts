@@ -1,59 +1,68 @@
+/**
+ * Colors (Legacy)
+ * 
+ * Diese Datei wird für Abwärtskompatibilität beibehalten.
+ * Verwende stattdessen `constants/brand.ts` für neue Entwicklungen.
+ * 
+ * Farbpalette: Rust Red & Rose Dust
+ */
+
 export const Colors = {
   light: {
-    text: '#1A1A1A',
+    text: '#1A1817',
     background: '#FFFFFF',
-    tint: '#2F95DC',
-    tabIconDefault: '#CCCCCC',
-    tabIconSelected: '#2F95DC',
-    primary: '#6C63FF', // Vibrant Purple/Blue for primary actions
-    secondary: '#FF6584', // Soft Red/Pink for accents
-    card: '#F8F9FA',
-    border: '#E1E4E8',
-    success: '#34C759',
-    error: '#FF3B30',
-    warning: '#FFCC00',
+    tint: '#B73B00',
+    tabIconDefault: '#B8ABA7',
+    tabIconSelected: '#B73B00',
+    primary: '#B73B00',       // Rust Red
+    secondary: '#D4CAC7',     // Rose Dust
+    card: '#FFFFFF',
+    border: '#E8E4E3',
+    success: '#4A9B5C',
+    error: '#C44536',
+    warning: '#D4A030',
     surface: '#FFFFFF',
-    surfaceHighlight: '#F0F2F5',
+    surfaceHighlight: '#FAF9F9',
   },
   dark: {
-    text: '#FFFFFF',
-    background: '#0F172A', // Deep Slate Blue/Black
-    tint: '#FFFFFF',
-    tabIconDefault: '#6B7280',
-    tabIconSelected: '#FFFFFF',
-    primary: '#818CF8', // Lighter Purple/Blue for dark mode
-    secondary: '#F472B6', // Lighter Pink for dark mode
-    card: '#1E293B', // Slate 800
-    border: '#334155', // Slate 700
-    success: '#4ADE80',
-    error: '#F87171',
-    warning: '#FBBF24',
-    surface: '#1E293B',
-    surfaceHighlight: '#334155',
+    text: '#FAF9F9',
+    background: '#1A1817',
+    tint: '#FAF9F9',
+    tabIconDefault: '#7A706C',
+    tabIconSelected: '#D45A20',
+    primary: '#D45A20',       // Lighter Rust Red for dark mode
+    secondary: '#B8ABA7',     // Darker Rose Dust
+    card: '#2A2625',
+    border: '#4A4543',
+    success: '#5AAE6C',
+    error: '#E05545',
+    warning: '#E4B040',
+    surface: '#2A2625',
+    surfaceHighlight: '#3A3533',
   },
   // Shared palette
   palette: {
     gray: {
-      50: '#F9FAFB',
-      100: '#F3F4F6',
-      200: '#E5E7EB',
-      300: '#D1D5DB',
-      400: '#9CA3AF',
-      500: '#6B7280',
-      600: '#4B5563',
-      700: '#374151',
-      800: '#1F2937',
-      900: '#111827',
+      50: '#FAF9F9',
+      100: '#F5F3F2',
+      200: '#E8E4E3',
+      300: '#D4CAC7',
+      400: '#B8ABA7',
+      500: '#9A8F8B',
+      600: '#7A706C',
+      700: '#5A524F',
+      800: '#3A3533',
+      900: '#1A1817',
     },
     primary: {
-      light: '#A5B4FC',
-      main: '#6366F1',
-      dark: '#4338CA',
+      light: '#D45A20',
+      main: '#B73B00',
+      dark: '#8A2C00',
     },
     accent: {
-      light: '#FDBA74',
-      main: '#F97316',
-      dark: '#C2410C',
+      light: '#E8E2E0',
+      main: '#D4CAC7',
+      dark: '#B8ABA7',
     }
   }
 };

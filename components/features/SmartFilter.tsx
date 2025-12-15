@@ -379,7 +379,7 @@ export default function SmartFilter({
                         <Button
                             label={step === 'what' ? 'Ergebnisse anzeigen' : 'Weiter'}
                             onPress={handleNext}
-                            variant="dark"
+                            variant={step === 'what' ? 'primary' : 'dark'}
                             size="lg"
                             style={step === 'when' ? { flex: 1 } : undefined}
                         />
