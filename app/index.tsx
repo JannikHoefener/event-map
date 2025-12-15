@@ -11,17 +11,17 @@ import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import { BlurView } from 'expo-blur';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MapPin, List, Filter, Navigation, Sparkles, X } from 'lucide-react-native';
+import { MapPin, List, Filter, Navigation, Sparkles, X, ChevronDown, ChevronUp } from 'lucide-react-native';
 
 // Brand & Config
 import { Brand } from '../constants/brand';
 
 // Types
-import { Event, ActiveFilters, ViewMode, DEFAULT_FILTERS } from '../types';
+import { Event, ActiveFilters, ViewMode, DEFAULT_FILTERS, WhenFilter } from '../types';
 
 // Data
 import { MOCK_EVENTS, DEFAULT_MAP_REGION, DEFAULT_LOCATION } from '../data/mockEvents';
-import { getCategoryColor } from '../data/categories';
+import { getCategoryColor, DAY_PRESETS } from '../data/categories';
 
 // Utils
 import { filterEvents } from '../utils/filters';
@@ -30,7 +30,7 @@ import { filterEvents } from '../utils/filters';
 import SmartFilter from '../components/features/SmartFilter';
 import FilterModal from '../components/features/FilterModal';
 import EventList from '../components/features/EventList';
-import { ItemCard, LocationPill, ActionBar } from '../components/ui';
+import { ItemCard, LocationPill, ActionBar, Chip } from '../components/ui';
 
 const { width, height } = Dimensions.get('window');
 
@@ -41,6 +41,7 @@ export default function HomeScreen() {
     const [isAgentVisible, setIsAgentVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
     const [activeFilters, setActiveFilters] = useState<ActiveFilters>(DEFAULT_FILTERS);
+    const [isWhenExpanded, setIsWhenExpanded] = useState(false);
 
     // Filtered Events
     const filteredEvents = useMemo(() => {
@@ -145,12 +146,36 @@ export default function HomeScreen() {
             {/* Top Bar / Header Area */}
             <SafeAreaView style={styles.topContainer} pointerEvents="box-none">
                 <View style={styles.header}>
-                    {/* Location Pill */}
-                    <LocationPill
-                        icon={<Navigation size={16} color={Brand.theme.light.text} />}
-                        text={DEFAULT_LOCATION.name}
-                    />
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: Brand.spacing.xs }}>
+                        {/* Location Pill */}
+                        <LocationPill
+                            icon={<Navigation size={16} color={Brand.theme.light.text} />}
+                            text={DEFAULT_LOCATION.name}
+                        />
 
+                        {/* Wann Filter Pill with Toggle */}
+                        <TouchableOpacity
+                            style={[
+                                styles.whenFilterPill,
+                                activeFilters.when !== 'any' && styles.activeFilterChip,
+                            ]}
+                            onPress={() => setIsWhenExpanded(!isWhenExpanded)}
+                        >
+                            <Text
+                                style={[
+                                    styles.filterText,
+                                    activeFilters.when !== 'any' && styles.activeFilterText,
+                                ]}
+                            >
+                                {getWhenDisplayText()}
+                            </Text>
+                            {isWhenExpanded ? (
+                                <ChevronUp size={16} color={activeFilters.when !== 'any' ? 'white' : Brand.theme.light.text} />
+                            ) : (
+                                <ChevronDown size={16} color={activeFilters.when !== 'any' ? 'white' : Brand.theme.light.text} />
+                            )}
+                        </TouchableOpacity>
+                    </View>
                     {/* Agent Button */}
                     <TouchableOpacity
                         style={styles.agentButton}
@@ -165,43 +190,26 @@ export default function HomeScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {/* Quick Filters */}
-                <View style={styles.quickFilters}>
-                    <TouchableOpacity
-                        style={[
-                            styles.filterChip,
-                            activeFilters.when !== 'any' && styles.activeFilterChip,
-                        ]}
-                        onPress={() => setIsFilterModalVisible(true)}
-                    >
-                        <Text
-                            style={[
-                                styles.filterText,
-                                activeFilters.when !== 'any' && styles.activeFilterText,
-                            ]}
-                        >
-                            {getWhenDisplayText()}
-                        </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={[
-                            styles.filterChip,
-                            { marginLeft: Brand.spacing.sm },
-                            activeFilters.indoor !== 'any' && styles.activeFilterChip,
-                        ]}
-                        onPress={() => setIsFilterModalVisible(true)}
-                    >
-                        <Text
-                            style={[
-                                styles.filterText,
-                                activeFilters.indoor !== 'any' && styles.activeFilterText,
-                            ]}
-                        >
-                            {getIndoorDisplayText()}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                {/* Expandable Day Chips */}
+                {isWhenExpanded && (
+                    <View style={styles.expandedDayChips}>
+                        {DAY_PRESETS.main.map((day) => (
+                            <Chip
+                                key={day.id}
+                                label={day.label}
+                                active={activeFilters.when === day.id}
+                                onPress={() => {
+                                    setActiveFilters(prev => ({
+                                        ...prev,
+                                        when: prev.when === day.id ? 'any' : day.id,
+                                        dateFrom: null,
+                                        dateTo: null,
+                                    }));
+                                }}
+                            />
+                        ))}
+                    </View>
+                )}
             </SafeAreaView>
 
             {/* Bottom Action Bar */}
@@ -272,6 +280,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginTop: Brand.spacing.md,
+        gap: Brand.spacing.sm,
+    },
+    whenFilterPill: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: Brand.spacing.xs,
+        paddingHorizontal: Brand.spacing.lg,
+        paddingVertical: Brand.spacing.md,
+        backgroundColor: Brand.colors.white,
+        borderRadius: Brand.radius.pill,
+        ...Brand.shadows.md,
     },
     agentButton: {
         width: 44,
@@ -285,6 +304,12 @@ const styles = StyleSheet.create({
         borderRadius: 22,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    expandedDayChips: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: Brand.spacing.sm,
+        marginTop: Brand.spacing.md,
     },
     quickFilters: {
         flexDirection: 'row',
