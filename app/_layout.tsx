@@ -49,6 +49,13 @@ export default function RootLayout() {
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="index" />
+                <Stack.Screen
+                    name="event/[id]"
+                    options={{
+                        presentation: 'card',
+                        animation: 'slide_from_right',
+                    }}
+                />
             </Stack>
             <StatusBar style="auto" />
         </ThemeProvider>

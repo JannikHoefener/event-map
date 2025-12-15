@@ -12,6 +12,7 @@ import { BlurView } from 'expo-blur';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MapPin, List, Filter, Navigation, Sparkles, X, ChevronDown, ChevronUp } from 'lucide-react-native';
+import { router } from 'expo-router';
 
 // Brand & Config
 import { Brand } from '../constants/brand';
@@ -30,7 +31,7 @@ import { filterEvents } from '../utils/filters';
 import SmartFilter from '../components/features/SmartFilter';
 import FilterModal from '../components/features/FilterModal';
 import EventList from '../components/features/EventList';
-import { ItemCard, LocationPill, ActionBar, Chip } from '../components/ui';
+import { ItemCard, LocationPill, ActionBar, Chip, Button } from '../components/ui';
 
 const { width, height } = Dimensions.get('window');
 
@@ -64,8 +65,7 @@ export default function HomeScreen() {
     };
 
     const handleEventPress = (event: Event) => {
-        // TODO: Navigate to event detail
-        console.log('Event pressed:', event);
+        router.push(`/event/${event.id}`);
     };
 
     // Action Bar Items
@@ -219,21 +219,36 @@ export default function HomeScreen() {
             {selectedEvent && viewMode === 'map' && (
                 <View style={styles.eventCardContainer}>
                     <BlurView intensity={100} tint="light" style={styles.eventCardWrapper}>
-                        <View style={styles.eventCardHeader}>
-                            <View style={styles.handle} />
-                            <TouchableOpacity
-                                onPress={() => setSelectedEvent(null)}
-                                style={styles.closeCardButton}
-                            >
-                                <X size={20} color={Brand.theme.light.tabIconDefault} />
-                            </TouchableOpacity>
-                        </View>
                         <ItemCard
                             event={selectedEvent}
                             compact={true}
                             style={{ elevation: 0, shadowOpacity: 0 }}
                             onPress={() => handleEventPress(selectedEvent)}
                         />
+                    </BlurView>
+                </View>
+            )}
+
+            {/* No Results Overlay */}
+            {filteredEvents.length === 0 && (
+                <View style={styles.noResultsContainer}>
+                    <BlurView intensity={90} tint="light" style={styles.noResultsBlur}>
+                        <View style={styles.noResultsContent}>
+                            <View style={styles.noResultsIconCircle}>
+                                <Filter size={32} color={Brand.colors.primary} />
+                            </View>
+                            <Text style={styles.noResultsTitle}>Keine Events gefunden</Text>
+                            <Text style={styles.noResultsText}>
+                                Leider passen keine Events zu deinen aktuellen Filtern.
+                                Versuch es doch mal mit weniger Einschränkungen.
+                            </Text>
+                            <Button
+                                label="Filter anpassen"
+                                onPress={() => setIsFilterModalVisible(true)}
+                                variant="primary"
+                                fullWidth
+                            />
+                        </View>
                     </BlurView>
                 </View>
             )}
@@ -359,32 +374,62 @@ const styles = StyleSheet.create({
     eventCardContainer: {
         position: 'absolute',
         bottom: 110, // Above bottom bar
-        left: Brand.spacing.xl,
-        right: Brand.spacing.xl,
+        left: Brand.spacing.lg, // Reduced margins
+        right: Brand.spacing.lg,
         ...Brand.shadows.xl,
     },
     eventCardWrapper: {
         borderRadius: Brand.radius.xl,
-        padding: Brand.spacing.lg,
         overflow: 'hidden',
-        backgroundColor: Brand.theme.light.surfaceBlur,
+        // Removed padding to let the card fill the space
+        backgroundColor: 'transparent', // Let ItemCard background show
     },
-    eventCardHeader: {
-        flexDirection: 'row',
+    noResultsContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         justifyContent: 'center',
         alignItems: 'center',
+        zIndex: 10,
+        padding: Brand.spacing.xl,
+    },
+    noResultsBlur: {
+        width: '100%',
+        maxWidth: 340,
+        borderRadius: Brand.radius.xl,
+        overflow: 'hidden',
+        ...Brand.shadows.lg,
+    },
+    noResultsContent: {
+        padding: Brand.spacing.xl,
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    },
+    noResultsIconCircle: {
+        width: 64,
+        height: 64,
+        borderRadius: 32,
+        backgroundColor: Brand.colors.primary + '15',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: Brand.spacing.lg,
+    },
+    noResultsTitle: {
+        fontFamily: Brand.typography.headings.h3.fontFamily,
+        fontSize: Brand.typography.headings.h3.fontSize,
+        fontWeight: Brand.typography.headings.h3.fontWeight,
+        color: Brand.theme.light.text,
         marginBottom: Brand.spacing.sm,
+        textAlign: 'center',
     },
-    handle: {
-        width: Brand.components.modal.handleWidth,
-        height: Brand.components.modal.handleHeight,
-        backgroundColor: Brand.colors.gray[200],
-        borderRadius: 2,
-    },
-    closeCardButton: {
-        position: 'absolute',
-        right: 0,
-        top: -4,
-        padding: Brand.spacing.xs,
+    noResultsText: {
+        fontFamily: Brand.typography.headings.body.fontFamily,
+        fontSize: Brand.typography.headings.body.fontSize,
+        color: Brand.theme.light.textSecondary,
+        textAlign: 'center',
+        marginBottom: Brand.spacing.xl,
+        lineHeight: 20,
     },
 });

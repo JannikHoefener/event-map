@@ -24,6 +24,7 @@ export const MOCK_EVENTS: Event[] = [
             longitude: 9.9614,
         },
         date: new Date(),
+        description: 'Erlebe eine unvergessliche Jazz-Nacht mit der renommierten "Blue Notes" Band. Genieße authentischen Jazz in intimer Atmosphäre und lass dich von virtuosen Improvisationen verzaubern. Das Knust bietet die perfekte Kulisse für einen stimmungsvollen Abend voller Musik und guter Laune.',
     },
     {
         id: '2',
@@ -37,6 +38,7 @@ export const MOCK_EVENTS: Event[] = [
             longitude: 9.9710,
         },
         date: new Date(),
+        description: 'Teste dein Wissen bei unserem legendären Pub Quiz! Zehn spannende Runden zu den unterschiedlichsten Themen warten auf dich. Bildet Teams, gewinnt tolle Preise und genießt dabei leckere Getränke in gemütlicher Pub-Atmosphäre.',
     },
     {
         id: '3',
@@ -50,6 +52,7 @@ export const MOCK_EVENTS: Event[] = [
             longitude: 9.9900,
         },
         date: new Date(),
+        description: 'Genieße den Sonnenuntergang über Hamburg von unserer spektakulären Rooftop-Bar. Mit Blick über die Dächer der Stadt bieten wir dir handgemachte Cocktails und entspannte Vibes. Der perfekte Ort, um den Feierabend einzuläuten!',
     },
     {
         id: '4',
@@ -63,6 +66,7 @@ export const MOCK_EVENTS: Event[] = [
             longitude: 9.9750,
         },
         date: new Date(),
+        description: 'Lach dich schlapp bei unserer Comedy Night! Drei aufstrebende und ein etablierter Comedian sorgen für einen Abend voller Gags, Pointen und garantiert guter Laune. Stand-Up Comedy vom Feinsten in Hamburgs beliebtester Comedy-Location.',
     },
     {
         id: '5',

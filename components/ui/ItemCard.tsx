@@ -9,7 +9,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from 'react-nativ
 import { MapPin, Clock } from 'lucide-react-native';
 import { Brand } from '../../constants/brand';
 import { Event } from '../../types';
-import { getCategoryColor, getCategoryLabel } from '../../data/categories';
+import { getCategoryColor, getCategoryLabel, getCategoryEmoji } from '../../data/categories';
 
 interface ItemCardProps {
     event: Event;
@@ -24,6 +24,9 @@ export default function ItemCard({
     style,
     compact = false,
 }: ItemCardProps) {
+    const categoryColor = getCategoryColor(event.category);
+    const categoryEmoji = getCategoryEmoji(event.category);
+
     return (
         <TouchableOpacity
             style={[
@@ -34,12 +37,33 @@ export default function ItemCard({
             onPress={onPress}
             activeOpacity={0.9}
         >
+            {/* Compact Mode: Colored Icon Box */}
+            {compact && (
+                <View style={[
+                    styles.compactIconContainer,
+                    { backgroundColor: categoryColor + '15' } // 15% opacity
+                ]}>
+                    <Text style={styles.compactEmoji}>
+                        {categoryEmoji}
+                    </Text>
+                </View>
+            )}
+
             {/* Image Placeholder (nur in voller Ansicht) */}
             {!compact && (
-                <View style={styles.imagePlaceholder}>
+                <View style={[
+                    styles.imagePlaceholder,
+                    { backgroundColor: categoryColor + '15' }
+                ]}>
+                    {/* Large Emoji Icon */}
+                    <Text style={styles.emojiIcon}>
+                        {categoryEmoji}
+                    </Text>
+
+                    {/* Category Badge */}
                     <Text style={[
                         styles.categoryBadge,
-                        { backgroundColor: getCategoryColor(event.category) }
+                        { backgroundColor: categoryColor }
                     ]}>
                         {getCategoryLabel(event.category)}
                     </Text>
@@ -82,15 +106,34 @@ const styles = StyleSheet.create({
     compactCard: {
         flexDirection: 'row',
         alignItems: 'center',
+        paddingLeft: Brand.spacing.md, // Add padding left for the icon container
+    },
+    compactIconContainer: {
+        width: 56,
+        height: 56,
+        borderRadius: Brand.radius.lg,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: Brand.spacing.xs, // Space to content
+    },
+    compactEmoji: {
+        fontSize: 28,
     },
     imagePlaceholder: {
         height: 120,
-        backgroundColor: Brand.colors.gray[200],
-        justifyContent: 'flex-end',
-        alignItems: 'flex-start',
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: Brand.spacing.md,
+        position: 'relative',
+    },
+    emojiIcon: {
+        fontSize: 48,
+        marginBottom: Brand.spacing.sm,
     },
     categoryBadge: {
+        position: 'absolute',
+        bottom: Brand.spacing.md,
+        left: Brand.spacing.md,
         backgroundColor: Brand.colors.accent,
         paddingHorizontal: 10,
         paddingVertical: 4,
