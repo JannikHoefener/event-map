@@ -6,8 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Platform, Modal, TouchableOpacity, Text } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { View, ScrollView, StyleSheet, Platform, TouchableOpacity, Text } from 'react-native';
 import { Calendar } from 'lucide-react-native';
 import { Brand } from '../../constants/brand';
 import { ActiveFilters, TimeOfDay } from '../../types';
@@ -21,6 +20,7 @@ import {
     Chip,
     Button,
 } from '../ui';
+import { DatePickerModal } from '../ui/DatePickerModal';
 
 interface FilterModalProps {
     visible: boolean;
@@ -89,63 +89,6 @@ export default function FilterModal({
         }));
     };
 
-    // Render Date Picker Modal (iOS)
-    const renderDatePickerModal = () => {
-        if (!showDatePicker) return null;
-
-        if (Platform.OS === 'ios') {
-            return (
-                <Modal
-                    transparent={true}
-                    animationType="fade"
-                    visible={showDatePicker}
-                    onRequestClose={() => setShowDatePicker(false)}
-                >
-                    <TouchableOpacity
-                        style={styles.iosDatePickerOverlay}
-                        activeOpacity={1}
-                        onPress={() => setShowDatePicker(false)}
-                    >
-                        <View
-                            style={styles.iosDatePickerContainer}
-                            onStartShouldSetResponder={() => true}
-                        >
-                            <View style={styles.iosDatePickerHeader}>
-                                <TouchableOpacity onPress={() => setShowDatePicker(false)}>
-                                    <Text style={styles.iosDatePickerDone}>Fertig</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <DateTimePicker
-                                value={
-                                    datePickerMode === 'from'
-                                        ? filters.dateFrom || new Date()
-                                        : filters.dateTo || new Date()
-                                }
-                                mode="date"
-                                display="inline"
-                                onChange={handleDateChange}
-                                style={styles.iosDatePicker}
-                                themeVariant="light"
-                            />
-                        </View>
-                    </TouchableOpacity>
-                </Modal>
-            );
-        }
-
-        return (
-            <DateTimePicker
-                value={
-                    datePickerMode === 'from'
-                        ? filters.dateFrom || new Date()
-                        : filters.dateTo || new Date()
-                }
-                mode="date"
-                display="default"
-                onChange={handleDateChange}
-            />
-        );
-    };
 
     return (
         <BottomSheet visible={visible} onClose={onClose}>
@@ -262,6 +205,7 @@ export default function FilterModal({
                 <View style={{ height: 100 }} />
             </ScrollView>
 
+
             {/* Footer */}
             <View style={styles.footer}>
                 <Button
@@ -274,7 +218,16 @@ export default function FilterModal({
             </View>
 
             {/* Date Picker */}
-            {renderDatePickerModal()}
+            <DatePickerModal
+                visible={showDatePicker}
+                onClose={() => setShowDatePicker(false)}
+                date={
+                    datePickerMode === 'from'
+                        ? filters.dateFrom || new Date()
+                        : filters.dateTo || new Date()
+                }
+                onChange={handleDateChange}
+            />
         </BottomSheet>
     );
 }
@@ -338,36 +291,4 @@ const styles = StyleSheet.create({
         right: 0,
     },
 
-    // iOS Date Picker
-    iosDatePickerOverlay: {
-        flex: 1,
-        backgroundColor: Brand.theme.light.overlayLight,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: Brand.spacing.xl,
-    },
-    iosDatePickerContainer: {
-        backgroundColor: Brand.colors.white,
-        borderRadius: Brand.radius.lg,
-        padding: Brand.spacing.lg,
-        width: '100%',
-        maxWidth: 400,
-        ...Brand.shadows.xl,
-    },
-    iosDatePickerHeader: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        marginBottom: Brand.spacing.sm,
-        paddingBottom: Brand.spacing.sm,
-        borderBottomWidth: 1,
-        borderBottomColor: Brand.colors.gray[100],
-    },
-    iosDatePickerDone: {
-        color: Brand.colors.primary,
-        fontWeight: Brand.typography.fontWeight.semibold,
-        fontSize: Brand.typography.fontSize.lg,
-    },
-    iosDatePicker: {
-        height: 320,
-    },
 });

@@ -233,3 +233,15 @@ export function getDayLabel(option: 'today' | 'tomorrow' | 'dayAfterTomorrow'): 
     }
     return `Übermorgen (${formatDateShort(dayAfterTomorrow)})`;
 }
+
+/**
+ * Formatiert ein Datum im langen deutschen Format (Wochentag, DD. Monat YYYY)
+ */
+export function formatDateLong(date: Date): string {
+    return new Intl.DateTimeFormat('de-DE', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+    }).format(date);
+}
